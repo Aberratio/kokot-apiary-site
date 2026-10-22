@@ -1,0 +1,43 @@
+:root {
+  --gutter: 1rem;
+  color-scheme: light;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: #fbf8f3;
+  color: #1d150c;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: #6b3a05;
+}
+
+:focus-visible {
+  outline: 3px solid #1a5fb4;
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
