@@ -70,11 +70,11 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 2: CMS and data
 
-- [ ] Neon Postgres + Drizzle schema and migrations for products, payment info, delivery options, settings, orders.
-- [ ] Admin auth (login page, session cookie, protected `/admin` routes).
-- [ ] CRUD screens for products, payment info, delivery options, settings. Image upload to Vercel Blob.
-- [ ] Seed script with placeholder data.
-- [ ] Public sections read from the database, revalidated on save.
+- [ ] Neon Postgres + Drizzle schema and migrations for products, payment info, delivery options, settings, orders. (Schema and migration done and tested on PGlite; waiting for the Neon database to run them.)
+- [x] Admin auth (login page, session cookie, protected `/admin` routes).
+- [ ] CRUD screens for products, payment info, delivery options, settings. Image upload to Vercel Blob. (Screens done; saving and uploads untested until Neon and Blob exist.)
+- [x] Seed script with placeholder data.
+- [ ] Public sections read from the database, revalidated on save. (Wired through `use cache` + `updateTag`; untested end to end until Neon exists.)
 
 ### Phase 3: ordering
 
