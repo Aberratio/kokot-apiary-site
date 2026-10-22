@@ -102,9 +102,9 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 6: visual refresh
 
-- [x] Hero honey dipper: a raymarched shader in the kit (`honeyDipperFragmentShader`, v0.3.0), text left of the dipper on wide screens and below it on phones, an SVG illustration of the same scene as the light-mode fallback.
+- [x] Hero honey dipper: a raymarched shader in the kit (`honeyDipperFragmentShader`, v0.3.0; the site pins v0.3.1), text left of the dipper on wide screens and below it on phones, an SVG illustration of the same scene as the light-mode fallback.
 - [x] Fonts: Fraunces for display type and Instrument Sans for body text, Polish letters checked in both, Fraunces in the Open Graph image.
-- [ ] Lighthouse mobile on a deployment: LCP under 2.5 s with a warm cache. (Local production build on the same machine: 3.0–3.1 s against 2.8–2.9 s for the phase 5 version, which measures 2.1–2.3 s live.)
+- [x] Lighthouse mobile on a deployment: LCP under 2.5 s with a warm cache. (Live, warm cache, median of 3–4 runs: `/pl` 2.38 s, `/en` 2.41 s; one of six runs reached 2.52 s. CLS 0, Accessibility, Best Practices and SEO 100, Performance 66–69: the honey dipper's shader compile adds about 2.5 s of blocking time in Lighthouse's software renderer.)
 
 ## Open questions
 
