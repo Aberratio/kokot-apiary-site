@@ -21,10 +21,11 @@ A one-page website for Franciszek Kokot's apiary that feels modern and creative:
 | Ordering       | CMS flag `orderMode`: `form` (order form) or `contact` (contact form only). Both must work                                                     |
 | Domain         | `*.vercel.app` for now                                                                                                                         |
 | Content        | Nothing exists yet. Use placeholder photos, copy and prices, all replaceable from the CMS                                                      |
+| Fonts          | Fraunces (display, soft 144pt cut) and Instrument Sans (body), self-hosted as small subset files (`assets/fonts`). The admin keeps Geist       |
 
 ## Page sections (one page, scroll-driven)
 
-1. **Hero**: kinetic typography (apiary name) over an abstract honey shader (flowing, viscous, golden, reacting to cursor and scroll).
+1. **Hero**: kinetic typography (apiary name) beside a backlit close-up of a wooden honey dipper with honey running off it and dripping (raymarched shader; the pointer turns the dipper, scroll speeds up the flow and dims the scene).
 2. **About the apiary**: photos with scroll-driven reveal, short story.
 3. **Bees / process**: particle system that forms a swarm, then a honeycomb, then a jar as the user scrolls.
 4. **Offer**: product cards from the CMS (name, description, size, price, photo, availability). A 3D honey jar model presents the featured product.
@@ -98,6 +99,12 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 - [x] SEO set (metadata, hreflang, OG image, sitemap, robots, JSON-LD).
 - [x] Accessibility pass and Lighthouse check on mobile. (axe: no violations. Live Lighthouse mobile, warm cache: LCP 2.3–2.4 s, Performance 79, Accessibility, Best Practices and SEO 100.)
 - [x] Handover note for Franciszek (in Polish, kept outside the repo): how to log in and edit the offer. (Draft in `web-studio/handover/`; the site address and studio email are still placeholders.)
+
+### Phase 6: visual refresh
+
+- [x] Hero honey dipper: a raymarched shader in the kit (`honeyDipperFragmentShader`, v0.3.0), text left of the dipper on wide screens and below it on phones, an SVG illustration of the same scene as the light-mode fallback.
+- [x] Fonts: Fraunces for display type and Instrument Sans for body text, Polish letters checked in both, Fraunces in the Open Graph image.
+- [ ] Lighthouse mobile on a deployment: LCP under 2.5 s with a warm cache. (Local production build on the same machine: 3.0–3.1 s against 2.8–2.9 s for the phase 5 version, which measures 2.1–2.3 s live.)
 
 ## Open questions
 
