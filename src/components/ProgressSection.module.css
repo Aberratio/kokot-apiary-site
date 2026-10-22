@@ -1,0 +1,14 @@
+.section {
+  min-height: 100vh;
+  padding: 6rem var(--gutter);
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.bar {
+  height: 0.25rem;
+  margin-top: 2rem;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(var(--scroll-progress, 0));
+}

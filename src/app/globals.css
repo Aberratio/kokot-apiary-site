@@ -1,0 +1,61 @@
+:root {
+  --bg: #120c06;
+  --fg: #fbf3e6;
+  --fg-muted: #c9b9a2;
+  --accent: #b9771e;
+  --accent-deep: #5a3510;
+  --focus: #ffd27a;
+  --gutter: 1rem;
+  color-scheme: dark;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem var(--gutter);
+}
+
+/* Reduced motion: no animations or smooth scrolling anywhere, whatever a component sets. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

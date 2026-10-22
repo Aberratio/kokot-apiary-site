@@ -1,0 +1,31 @@
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 6rem var(--gutter);
+  overflow: hidden;
+  /* The light version: what everyone sees until, and unless, the scene mounts. */
+  background:
+    radial-gradient(ellipse at 30% 30%, var(--accent) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, var(--accent-deep) 0%, transparent 55%), var(--bg);
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.content {
+  position: relative;
+  max-width: 40rem;
+  text-align: center;
+  /* Keeps light text readable over the bright parts of the shader. */
+  text-shadow: 0 1px 16px rgb(0 0 0 / 0.55);
+}
+
+.content h1 {
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  line-height: 1;
+  margin: 0 0 1rem;
+}
