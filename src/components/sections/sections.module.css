@@ -221,3 +221,119 @@
   margin: 3rem 0 1rem;
   color: var(--fg-muted);
 }
+
+/* Process: steps scroll past a sticky stage. */
+.processLayout {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+}
+
+.stage {
+  position: sticky;
+  top: 4rem;
+  height: 42vh;
+  z-index: 0;
+}
+
+.stageInner {
+  width: 100%;
+  height: 100%;
+  /* Bloom lifts the whole frame a little; fading the edges hides the canvas rectangle. */
+  mask-image: radial-gradient(closest-side, #000 75%, transparent 100%);
+}
+
+.processSteps {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 40vh;
+  margin: 0;
+  padding: 0 0 20vh;
+  list-style: none;
+}
+
+.processSteps li {
+  max-width: 26rem;
+  padding: 1.5rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 0.5rem;
+  background: rgb(18 12 6 / 0.88);
+}
+
+.processSteps h3 {
+  margin: 0.5rem 0;
+  font-size: 1.6rem;
+}
+
+.processSteps p {
+  margin: 0;
+  color: var(--fg-muted);
+}
+
+.stepNumber {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+@media (min-width: 60rem) {
+  .processLayout {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .stage {
+    grid-column: 2;
+    grid-row: 1;
+    top: 15vh;
+    height: 70vh;
+  }
+
+  .processSteps {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 20vh 0;
+  }
+
+  .processSteps li {
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+}
+
+/* Offer: the featured product, presented as a 3D jar. */
+.featured {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.featuredStage {
+  height: 22rem;
+}
+
+.featuredStage > div {
+  width: 100%;
+  height: 100%;
+}
+
+.featured h3 {
+  margin: 0.5rem 0;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.featured p {
+  color: var(--fg-muted);
+}
+
+@media (min-width: 48rem) {
+  .featured {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .featuredStage {
+    height: 28rem;
+  }
+}

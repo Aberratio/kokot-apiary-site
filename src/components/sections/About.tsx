@@ -1,3 +1,4 @@
+import { KineticText } from 'web-studio-kit'
 import type { Dictionary } from '@/i18n/dictionaries'
 import { Section } from '../Section'
 import styles from './sections.module.css'
@@ -10,7 +11,9 @@ interface AboutProps {
 export function About({ story, dict }: AboutProps) {
   return (
     <Section id="about" labelledBy="about-title" className={styles.section}>
-      <h2 id="about-title">{dict.title}</h2>
+      <KineticText as="h2" id="about-title">
+        {dict.title}
+      </KineticText>
       <p className={styles.lead}>{story}</p>
       {/* Placeholders until Franciszek uploads photos through the CMS. */}
       <div className={styles.photos}>
