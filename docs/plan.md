@@ -10,7 +10,7 @@ A one-page website for Franciszek Kokot's apiary that feels modern and creative:
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Framework      | Next.js (App Router) + TypeScript, hosted on Vercel                                                                                            |
 | 3D and effects | three.js, @react-three/fiber, @react-three/drei, postprocessing, custom GLSL, GSAP (incl. ScrollTrigger and SplitText, free since 2025), Lenis |
-| Paid libraries | None. Every dependency must be free and open source                                                                                            |
+| Paid libraries | None. Every dependency must be free; all are open source except GSAP, free under its own no-charge licence                                     |
 | Shared code    | Reusable effects go to `web-studio-kit`, installed as a pinned git dependency (`github:aberratio/web-studio-kit#vX.Y.Z`)                       |
 | CMS            | Custom, built into this app under `/admin`. Single admin user (Franciszek)                                                                     |
 | Database       | Postgres on the free Neon tier (Vercel Marketplace), Drizzle ORM                                                                               |
