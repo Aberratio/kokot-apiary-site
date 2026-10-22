@@ -1,5 +1,6 @@
 import { localize, type DeliveryOption, type PaymentInfo } from '@/content'
 import type { Locale } from '@/i18n/config'
+import { KineticText } from 'web-studio-kit'
 import type { Dictionary } from '@/i18n/dictionaries'
 import { formatPrice } from '@/lib/money'
 import { Section } from '../Section'
@@ -15,7 +16,9 @@ interface HowToOrderProps {
 export function HowToOrder({ locale, payment, delivery, dict }: HowToOrderProps) {
   return (
     <Section id="how-to-order" labelledBy="how-to-order-title" className={styles.section}>
-      <h2 id="how-to-order-title">{dict.title}</h2>
+      <KineticText as="h2" id="how-to-order-title">
+        {dict.title}
+      </KineticText>
       <p className={styles.lead}>{dict.intro}</p>
       <div className={styles.columns}>
         <div>

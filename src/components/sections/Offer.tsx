@@ -3,6 +3,9 @@ import { localize, type Product } from '@/content'
 import type { Locale } from '@/i18n/config'
 import type { Dictionary } from '@/i18n/dictionaries'
 import { formatPrice } from '@/lib/money'
+import { KineticText, QualityGate } from 'web-studio-kit'
+import { JarIllustration } from '../jar/JarIllustration'
+import { JarScene } from '../jar/JarScene'
 import { Section } from '../Section'
 import styles from './sections.module.css'
 
@@ -13,10 +16,32 @@ interface OfferProps {
 }
 
 export function Offer({ locale, products, dict }: OfferProps) {
+  // The jar presents one product: the featured one if it is on sale, else the first on sale.
+  const featured =
+    products.find((p) => p.featured && p.available) ?? products.find((p) => p.available)
   return (
     <Section id="offer" labelledBy="offer-title" className={styles.section}>
-      <h2 id="offer-title">{dict.title}</h2>
+      <KineticText as="h2" id="offer-title">
+        {dict.title}
+      </KineticText>
       <p className={styles.lead}>{dict.intro}</p>
+      {featured && (
+        <div className={styles.featured}>
+          <div className={styles.featuredStage}>
+            <QualityGate fallback={<JarIllustration />}>
+              <JarScene />
+            </QualityGate>
+          </div>
+          <div>
+            <span className={styles.badge}>{dict.featured}</span>
+            <h3>{localize(featured.name, locale)}</h3>
+            <p>{localize(featured.description, locale)}</p>
+            <p>
+              {featured.size} · <strong>{formatPrice(featured.priceGrosze, locale)}</strong>
+            </p>
+          </div>
+        </div>
+      )}
       <ul className={styles.products}>
         {products.map((product) => (
           <li key={product.id} className={styles.product} data-available={product.available}>

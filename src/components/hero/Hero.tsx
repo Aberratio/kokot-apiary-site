@@ -1,4 +1,4 @@
-import { QualityGate } from 'web-studio-kit'
+import { KineticText, QualityGate } from 'web-studio-kit'
 import styles from './Hero.module.css'
 import { HeroScene } from './HeroScene'
 
@@ -20,7 +20,9 @@ export function Hero({ title, tagline, scrollHint }: HeroProps) {
         <HeroScene />
       </QualityGate>
       <div className={styles.content}>
-        <h1 id="hero-title">{title}</h1>
+        <KineticText as="h1" id="hero-title" trigger="mount" distort stagger={0.04}>
+          {title}
+        </KineticText>
         <p>{tagline}</p>
       </div>
       <a href="#about" className={styles.hint}>

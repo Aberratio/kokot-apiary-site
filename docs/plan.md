@@ -86,12 +86,12 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 4: visuals
 
-- [ ] Hero honey shader (reusable part goes into the kit).
-- [ ] Kinetic typography for the hero and section titles (SplitText + shader distortion).
-- [ ] Particle swarm to honeycomb to jar morph.
-- [ ] 3D honey jar model (built in code or Blender, compressed `.glb`) for the featured product.
-- [ ] Post-processing pass (bloom, grain) tuned per quality tier.
-- [ ] Light-mode fallback for every scene.
+- [x] Hero honey shader (reusable part goes into the kit). (Kit `fluidFragmentShader`, v0.2.0.)
+- [x] Kinetic typography for the hero and section titles (SplitText + shader distortion). (The distortion is an SVG displacement filter rather than a WebGL shader: it works on real DOM text, so the titles stay selectable and accessible.)
+- [x] Particle swarm to honeycomb to jar morph.
+- [x] 3D honey jar model (built in code or Blender, compressed `.glb`) for the featured product. (Built in code from lathe profiles, so there is no model file to compress.)
+- [x] Post-processing pass (bloom, grain) tuned per quality tier.
+- [x] Light-mode fallback for every scene.
 
 ### Phase 5: polish and launch
 

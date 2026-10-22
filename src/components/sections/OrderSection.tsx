@@ -1,3 +1,4 @@
+import { KineticText } from 'web-studio-kit'
 import type { SiteContent } from '@/content'
 import type { Locale } from '@/i18n/config'
 import type { Dictionary } from '@/i18n/dictionaries'
@@ -25,7 +26,9 @@ export function OrderSection({ locale, content, dict }: OrderSectionProps) {
   const t = dict.order
   return (
     <Section id="order" labelledBy="order-title" className={styles.section}>
-      <h2 id="order-title">{canOrder ? t.titleForm : t.titleContact}</h2>
+      <KineticText as="h2" id="order-title">
+        {canOrder ? t.titleForm : t.titleContact}
+      </KineticText>
       <p className={styles.lead}>{canOrder ? t.introForm : t.introContact}</p>
       {canOrder ? (
         <OrderForm
