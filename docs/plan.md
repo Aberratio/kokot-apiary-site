@@ -64,24 +64,24 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 1: site skeleton
 
-- [ ] Bring the starter into this repo, deploy to Vercel, confirm the preview URL works. (Starter brought in; the deploy waits for the owner to approve a Vercel project and plan.)
+- [x] Bring the starter into this repo, deploy to Vercel, confirm the preview URL works. (Vercel Hobby project `kokot-apiary-site`, functions in `fra1`: https://kokot-apiary-site.vercel.app. PR previews sit behind Vercel login.)
 - [x] One-page layout with all seven sections, placeholder content, language switch.
 - [x] Smooth scroll and per-section scroll progress.
 
 ### Phase 2: CMS and data
 
-- [ ] Neon Postgres + Drizzle schema and migrations for products, payment info, delivery options, settings, orders. (Schema and migration done and tested on PGlite; waiting for the Neon database to run them.)
+- [x] Neon Postgres + Drizzle schema and migrations for products, payment info, delivery options, settings, orders. (Neon free plan in Frankfurt; migrations run by `vercel-build`; seeded.)
 - [x] Admin auth (login page, session cookie, protected `/admin` routes).
-- [ ] CRUD screens for products, payment info, delivery options, settings. Image upload to Vercel Blob. (Screens done; saving and uploads untested until Neon and Blob exist.)
+- [x] CRUD screens for products, payment info, delivery options, settings. Image upload to Vercel Blob. (Checked live: save, photo upload, photo removal also deletes the Blob file.)
 - [x] Seed script with placeholder data.
-- [ ] Public sections read from the database, revalidated on save. (Wired through `use cache` + `updateTag`; untested end to end until Neon exists.)
+- [x] Public sections read from the database, revalidated on save. (Checked live; Vercel's cache shows the change within a few seconds.)
 
 ### Phase 3: ordering
 
 - [x] `orderMode` switch rendering either form.
-- [ ] Order form with zod validation, total calculation, DB write, two emails via Resend. (Built and unit-tested on PGlite; the real DB write and Resend sending wait for Neon and Resend.)
+- [ ] Order form with zod validation, total calculation, DB write, two emails via Resend. (Checked live: validation, total, DB write. Emails wait for Resend, which needs a sending domain; see open questions.)
 - [x] Contact form. (Checked in the browser; real sending waits for Resend.)
-- [ ] Orders list and status changes in `/admin`. (Built; checked against a real database once Neon exists.)
+- [x] Orders list and status changes in `/admin`. (Checked live.)
 - [x] Honeypot and rate limiting.
 
 ### Phase 4: visuals
@@ -95,9 +95,9 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 5: polish and launch
 
-- [ ] SEO set (metadata, hreflang, OG image, sitemap, robots, JSON-LD).
-- [ ] Accessibility pass and Lighthouse check on mobile.
-- [ ] Handover note for Franciszek (in Polish, kept outside the repo): how to log in and edit the offer.
+- [x] SEO set (metadata, hreflang, OG image, sitemap, robots, JSON-LD).
+- [x] Accessibility pass and Lighthouse check on mobile. (axe: no violations. Live Lighthouse mobile, warm cache: LCP 2.3–2.4 s, Performance 79, Accessibility, Best Practices and SEO 100.)
+- [x] Handover note for Franciszek (in Polish, kept outside the repo): how to log in and edit the offer. (Draft in `web-studio/handover/`; the site address and studio email are still placeholders.)
 
 ## Open questions
 

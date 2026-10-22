@@ -9,13 +9,23 @@ import styles from './LanguageSwitch.module.css'
 interface LanguageSwitchProps {
   current: Locale
   labels: Dictionary['languageSwitch']
+  /**
+   * A navigation landmark (default). The page shows the switch twice, header and footer; the
+   * second is a plain group so screen readers do not list two identical landmarks.
+   */
+  landmark?: boolean
 }
 
 /** Links to the current page in every language. Each name is written in its own language. */
-export function LanguageSwitch({ current, labels }: LanguageSwitchProps) {
+export function LanguageSwitch({ current, labels, landmark = true }: LanguageSwitchProps) {
   const pathname = usePathname() ?? '/'
+  const Wrapper = landmark ? 'nav' : 'div'
   return (
-    <nav aria-label={labels.label} className={styles.switch}>
+    <Wrapper
+      aria-label={labels.label}
+      className={styles.switch}
+      {...(!landmark && { role: 'group' })}
+    >
       <ul>
         {locales.map((locale) => (
           <li key={locale}>
@@ -31,6 +41,6 @@ export function LanguageSwitch({ current, labels }: LanguageSwitchProps) {
           </li>
         ))}
       </ul>
-    </nav>
+    </Wrapper>
   )
 }

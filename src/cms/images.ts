@@ -1,5 +1,5 @@
 import 'server-only'
-import { put } from '@vercel/blob'
+import { del, put } from '@vercel/blob'
 import type { AdminErrorKey } from '@/i18n/admin'
 
 const EXTENSIONS: Record<string, string> = {
@@ -35,5 +35,19 @@ export async function uploadProductImage(
   } catch (error) {
     console.error('Product photo upload failed', error)
     return { error: 'uploadFailed' }
+  }
+}
+
+/**
+ * Deletes a product photo from Vercel Blob. Only our own Blob files are touched, and a failure
+ * is logged rather than thrown: an orphaned file costs a few kilobytes, a failed save costs work.
+ */
+export async function deleteProductImage(url: string): Promise<void> {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return
+  if (!/^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//.test(url)) return
+  try {
+    await del(url)
+  } catch (error) {
+    console.error('Product photo delete failed', error)
   }
 }

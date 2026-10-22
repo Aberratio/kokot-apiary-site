@@ -30,6 +30,20 @@ export async function generateMetadata({ params }: LayoutProps<'/[lang]'>): Prom
         'x-default': `/${defaultLocale}`,
       },
     },
+    // The image itself comes from opengraph-image.tsx next to this layout.
+    openGraph: {
+      type: 'website',
+      url: `/${lang}`,
+      title: dict.meta.title,
+      description: dict.meta.description,
+      locale: lang === 'pl' ? 'pl_PL' : 'en_GB',
+      alternateLocale: lang === 'pl' ? ['en_GB'] : ['pl_PL'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: dict.meta.title,
+      description: dict.meta.description,
+    },
   }
 }
 
