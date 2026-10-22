@@ -78,11 +78,11 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 3: ordering
 
-- [ ] `orderMode` switch rendering either form.
-- [ ] Order form with zod validation, total calculation, DB write, two emails via Resend.
-- [ ] Contact form.
-- [ ] Orders list and status changes in `/admin`.
-- [ ] Honeypot and rate limiting.
+- [x] `orderMode` switch rendering either form.
+- [ ] Order form with zod validation, total calculation, DB write, two emails via Resend. (Built and unit-tested on PGlite; the real DB write and Resend sending wait for Neon and Resend.)
+- [x] Contact form. (Checked in the browser; real sending waits for Resend.)
+- [ ] Orders list and status changes in `/admin`. (Built; checked against a real database once Neon exists.)
+- [x] Honeypot and rate limiting.
 
 ### Phase 4: visuals
 
