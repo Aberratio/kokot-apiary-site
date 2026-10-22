@@ -20,7 +20,7 @@ async function NewDelivery({ params }: { params: Promise<{ lang: string }> }) {
       {!db && <DbMissing dict={dict} />}
       <DeliveryForm
         action={saveDeliveryAction.bind(null, lang, null)}
-        initial={{ enabled: 'on' }}
+        initial={{ enabled: 'on', requiresAddress: 'on' }}
         dict={dict}
         cancelHref={`/admin/${lang}/delivery`}
       />

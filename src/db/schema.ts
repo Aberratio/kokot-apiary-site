@@ -48,6 +48,8 @@ export const deliveryOptions = pgTable('delivery_options', {
   descriptionPl: text('description_pl').notNull().default(''),
   descriptionEn: text('description_en').notNull().default(''),
   priceGrosze: integer('price_grosze').notNull().default(0),
+  /** Shipping needs an address; pickup does not. */
+  requiresAddress: boolean('requires_address').notNull().default(true),
   enabled: boolean('enabled').notNull().default(true),
   sortOrder: integer('sort_order').notNull().default(0),
   updatedAt: updatedAt(),
@@ -99,4 +101,14 @@ export const orders = pgTable('orders', {
   status: orderStatusEnum('status').notNull().default('new'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: updatedAt(),
+})
+
+/**
+ * Fixed-window counters for rate limiting public forms and the admin login. The key is a hash
+ * of the form name and the client IP, so no raw IP is stored.
+ */
+export const rateLimits = pgTable('rate_limits', {
+  key: text('key').primaryKey(),
+  count: integer('count').notNull(),
+  windowStart: timestamp('window_start', { withTimezone: true }).notNull(),
 })

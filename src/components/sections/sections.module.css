@@ -216,3 +216,8 @@
   margin: 0;
   color: var(--fg-muted);
 }
+
+.direct {
+  margin: 3rem 0 1rem;
+  color: var(--fg-muted);
+}

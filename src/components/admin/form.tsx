@@ -40,18 +40,15 @@ export function FormMessage({ state, dict }: { state: FormState; dict: AdminDict
       </p>
     )
   }
-  const message =
-    state.message === 'fixErrors'
-      ? dict.common.fixErrors
-      : state.message === 'notFound'
-        ? dict.common.notFound
-        : state.message === 'dbMissing'
-          ? dict.dbMissing
-          : state.message === 'wrongPassword'
-            ? dict.login.wrongPassword
-            : state.message === 'notConfigured'
-              ? dict.login.notConfigured
-              : null
+  const messages: Record<NonNullable<FormState['message']>, string> = {
+    fixErrors: dict.common.fixErrors,
+    notFound: dict.common.notFound,
+    dbMissing: dict.dbMissing,
+    wrongPassword: dict.login.wrongPassword,
+    notConfigured: dict.login.notConfigured,
+    tooMany: dict.login.tooMany,
+  }
+  const message = state.message ? messages[state.message] : null
   return message ? (
     <p role="alert" className={styles.error}>
       {message}

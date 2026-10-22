@@ -28,6 +28,15 @@ Postgres on Neon through Drizzle ORM. The schema lives in `src/db/schema.ts`, an
 
 On Vercel, `vercel-build` runs `db:migrate` before `next build`. Tests run the same migrations against an in-memory PGlite, so they need no database.
 
+## Ordering
+
+The CMS setting `orderMode` picks the form at the bottom of the page: `form` (order form) or `contact` (contact form). The order form falls back to the contact form while no product is available.
+
+- Prices are recalculated on the server from the database; the browser total is only a preview.
+- The order is stored before any email is sent, so a failed email never loses an order. Franciszek gets a notification in Polish (reply goes to the customer), and the customer gets a confirmation with the transfer details in their language.
+- Spam: an off-screen honeypot field, plus a per-IP rate limit stored in Postgres (`rate_limits`, hashed keys, no raw IPs). The admin login is rate-limited the same way.
+- Emails go through Resend (`RESEND_API_KEY`, `EMAIL_FROM`). Without a key they are skipped and logged; a contact message then shows an error, because the email is its only copy.
+
 ## Admin (`/admin`)
 
 One admin account. Create its secrets with:

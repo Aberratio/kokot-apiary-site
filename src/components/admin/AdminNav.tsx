@@ -7,7 +7,7 @@ import { locales, type Locale } from '@/i18n/config'
 import type { AdminDictionary } from '@/i18n/admin'
 import styles from './admin.module.css'
 
-const sections = ['', 'products', 'delivery', 'payment', 'settings'] as const
+const sections = ['', 'orders', 'products', 'delivery', 'payment', 'settings'] as const
 
 interface AdminNavProps {
   lang: Locale
@@ -34,6 +34,7 @@ function CurrentNav(props: AdminNavProps) {
 function NavLinks({ lang, dict, pathname }: AdminNavProps & { pathname: string }) {
   const labels = {
     '': dict.nav.dashboard,
+    orders: dict.nav.orders,
     products: dict.nav.products,
     delivery: dict.nav.delivery,
     payment: dict.nav.payment,

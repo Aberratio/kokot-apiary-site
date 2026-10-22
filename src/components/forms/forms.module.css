@@ -1,0 +1,178 @@
+.form {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 48rem;
+}
+
+.group {
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  border-radius: 0.5rem;
+  min-width: 0;
+}
+
+.group legend {
+  padding: 0 0.4rem;
+  font-weight: 700;
+}
+
+.group[aria-invalid='true'] {
+  border-color: #ff8a80;
+}
+
+.items {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.items li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.form .items input[type='number'] {
+  width: 5rem;
+  flex: none;
+}
+
+.choice {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.5rem 0;
+}
+
+.choice small {
+  display: block;
+}
+
+.choice input {
+  margin-top: 0.3rem;
+}
+
+.row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 48rem) {
+  .row {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  }
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field label {
+  font-weight: 600;
+}
+
+.form input[type='text'],
+.form input[type='email'],
+.form input[type='tel'],
+.form input[type='number'],
+.form textarea {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: 0.375rem;
+  background: rgb(0 0 0 / 0.35);
+  color: var(--fg);
+  font: inherit;
+}
+
+.form [aria-invalid='true'] {
+  border-color: #ff8a80;
+}
+
+.hint,
+.muted {
+  color: var(--fg-muted);
+}
+
+.fieldError {
+  color: #ffb4ab;
+  font-weight: 600;
+}
+
+.summary {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  max-width: 24rem;
+}
+
+.summary div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.total {
+  padding-top: 0.5rem;
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.8rem 1.6rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #1a1004;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.error,
+.success {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+}
+
+.error {
+  background: rgb(179 38 30 / 0.25);
+  border: 1px solid #ff8a80;
+}
+
+.success {
+  max-width: 48rem;
+  background: rgb(46 125 50 / 0.25);
+  border: 1px solid #81c784;
+}
+
+.success p {
+  margin: 0 0 0.5rem;
+}
+
+/* Off-screen rather than display:none, which some bots skip. */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

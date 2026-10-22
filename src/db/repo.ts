@@ -40,6 +40,7 @@ function toDeliveryOption(row: DeliveryRow): DeliveryOption {
     name: { pl: row.namePl, en: row.nameEn },
     description: { pl: row.descriptionPl, en: row.descriptionEn },
     priceGrosze: row.priceGrosze,
+    requiresAddress: row.requiresAddress,
     enabled: row.enabled,
     sortOrder: row.sortOrder,
   }
@@ -258,6 +259,7 @@ export async function seedPlaceholders(db: Db): Promise<string[]> {
         descriptionPl: option.description.pl,
         descriptionEn: option.description.en,
         priceGrosze: option.priceGrosze,
+        requiresAddress: option.requiresAddress,
         enabled: option.enabled,
         sortOrder: option.sortOrder,
       })),

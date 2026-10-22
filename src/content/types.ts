@@ -30,6 +30,7 @@ export interface DeliveryOption {
   name: Localized
   description: Localized
   priceGrosze: number
+  requiresAddress: boolean
   enabled: boolean
   sortOrder: number
 }

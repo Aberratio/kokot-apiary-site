@@ -72,6 +72,7 @@ describe('readSiteContent', () => {
       descriptionPl: '',
       descriptionEn: '',
       priceGrosze: 0,
+      requiresAddress: true,
       enabled: false,
       sortOrder: 0,
     })
