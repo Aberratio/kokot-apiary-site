@@ -1,6 +1,7 @@
 import 'server-only'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { connection } from 'next/server'
 import type { Locale } from '@/i18n/config'
 import { hashPassword, verifyPassword } from './password'
 import { createSessionToken, SESSION_TTL_SECONDS, verifySessionToken } from './token'
@@ -19,6 +20,9 @@ export async function isAdmin(): Promise<boolean> {
   const config = authConfig()
   if (!config) return false
   const token = (await cookies()).get(COOKIE)?.value
+  // The expiry check needs the current time, which only exists at request time; this stops
+  // Next from evaluating it while prerendering a route shell.
+  await connection()
   return token ? verifySessionToken(token, config.secret, Date.now()) : false
 }
 
