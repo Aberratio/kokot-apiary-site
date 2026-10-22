@@ -1,15 +1,38 @@
+/*
+ * Phones and portrait screens: the dipper hangs in the upper part, the text sits below it.
+ * Wide screens (the same query as WIDE_HERO_QUERY in layout.ts): text left, dipper right.
+ */
 .hero {
   position: relative;
   display: grid;
-  place-items: center;
+  align-content: end;
+  justify-items: center;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 6rem var(--gutter);
+  padding: 6rem var(--gutter) 6.5rem;
   overflow: hidden;
-  /* The light version: what everyone sees until, and unless, the scene mounts. */
+  /* The light version's backdrop, matching the shader's: warm dark with the sun up and right. */
   background:
-    radial-gradient(ellipse at 30% 30%, var(--accent) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 80%, var(--accent-deep) 0%, transparent 55%), var(--bg);
+    radial-gradient(
+      circle at 72% -6%,
+      rgb(255 205 125 / 0.5) 0%,
+      rgb(224 150 45 / 0.16) 26%,
+      transparent 52%
+    ),
+    linear-gradient(to bottom, #1b1007, #0c0703 70%);
+}
+
+.illustration {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 64%;
+  width: auto;
+  aspect-ratio: 2 / 3;
+  transform: translateX(-46%);
+  /* The handle and the sun glow run past the drawing; the hero clips them. */
+  overflow: visible;
+  animation: scene-in 0.8s ease-out both;
 }
 
 .backdrop {
@@ -17,17 +40,29 @@
   inset: 0;
 }
 
+/* The scene fades in over the illustration once it mounts. */
+.backdrop[data-quality='full'] {
+  background: #0c0703;
+  animation: scene-in 1.4s ease-out both;
+}
+
+@keyframes scene-in {
+  from {
+    opacity: 0;
+  }
+}
+
 .content {
   position: relative;
   max-width: 40rem;
   text-align: center;
-  /* Keeps light text readable over the bright parts of the shader. */
-  text-shadow: 0 1px 16px rgb(0 0 0 / 0.55);
+  /* Keeps light text readable over the honey. */
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.65);
 }
 
 .content h1 {
-  font-size: clamp(2.75rem, 10vw, 7rem);
-  line-height: 1;
+  font-size: clamp(2.75rem, 12vw, 7rem);
+  line-height: 0.98;
   margin: 0 0 1rem;
 }
 
@@ -45,4 +80,37 @@
   font-size: 0.9rem;
   text-decoration: none;
   text-shadow: 0 1px 8px rgb(0 0 0 / 0.6);
+  white-space: nowrap;
+}
+
+@media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
+  .hero {
+    align-content: center;
+    justify-items: start;
+    padding: 6rem calc(var(--gutter) * 2);
+    background:
+      radial-gradient(
+        circle at 86% -6%,
+        rgb(255 205 125 / 0.5) 0%,
+        rgb(224 150 45 / 0.16) 24%,
+        transparent 48%
+      ),
+      linear-gradient(to bottom, #1b1007, #0c0703 70%);
+  }
+
+  .illustration {
+    left: auto;
+    right: 8%;
+    height: 100%;
+    transform: none;
+  }
+
+  .content {
+    max-width: min(40rem, 50vw);
+    text-align: left;
+  }
+
+  .content h1 {
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+  }
 }

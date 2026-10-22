@@ -10,7 +10,9 @@
 }
 
 .brand {
-  font-weight: 700;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 600;
   text-decoration: none;
   margin-right: auto;
 }
