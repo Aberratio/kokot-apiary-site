@@ -10,7 +10,7 @@ A one-page website for Franciszek Kokot's apiary that feels modern and creative:
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Framework      | Next.js (App Router) + TypeScript, hosted on Vercel                                                                                            |
 | 3D and effects | three.js, @react-three/fiber, @react-three/drei, postprocessing, custom GLSL, GSAP (incl. ScrollTrigger and SplitText, free since 2025), Lenis |
-| Paid libraries | None. Every dependency must be free and open source                                                                                            |
+| Paid libraries | None. Every dependency must be free; all are open source except GSAP, free under its own no-charge licence                                     |
 | Shared code    | Reusable effects go to `web-studio-kit`, installed as a pinned git dependency (`github:aberratio/web-studio-kit#vX.Y.Z`)                       |
 | CMS            | Custom, built into this app under `/admin`. Single admin user (Franciszek)                                                                     |
 | Database       | Postgres on the free Neon tier (Vercel Marketplace), Drizzle ORM                                                                               |
@@ -102,9 +102,9 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 6: visual refresh
 
-- [x] Hero honey dipper: a raymarched shader in the kit (`honeyDipperFragmentShader`, v0.3.0), text left of the dipper on wide screens and below it on phones, an SVG illustration of the same scene as the light-mode fallback.
+- [x] Hero honey dipper: a raymarched shader in the kit (`honeyDipperFragmentShader`, v0.3.0; the site pins v0.3.1), text left of the dipper on wide screens and below it on phones, an SVG illustration of the same scene as the light-mode fallback.
 - [x] Fonts: Fraunces for display type and Instrument Sans for body text, Polish letters checked in both, Fraunces in the Open Graph image.
-- [ ] Lighthouse mobile on a deployment: LCP under 2.5 s with a warm cache. (Local production build on the same machine: 3.0–3.1 s against 2.8–2.9 s for the phase 5 version, which measures 2.1–2.3 s live.)
+- [x] Lighthouse mobile on a deployment: LCP under 2.5 s with a warm cache. (Live, warm cache, median of 3 runs per page: `/pl` 2.38 s, `/en` 2.41 s; one of the six runs reached 2.52 s. CLS 0, Accessibility, Best Practices and SEO 100, Performance 66–69: the honey dipper's shader compile adds about 2.5 s of blocking time in Lighthouse's software renderer.)
 
 ## Open questions
 
