@@ -11,6 +11,7 @@ import { getDb } from '@/db/client'
 import {
   deleteDeliveryOption,
   deleteProduct,
+  getProduct,
   saveDeliveryOption,
   savePaymentInfo,
   saveProduct,
@@ -18,7 +19,7 @@ import {
 } from '@/db/repo'
 import type { AdminErrorKey } from '@/i18n/admin'
 import { isLocale, type Locale } from '@/i18n/config'
-import { uploadProductImage } from './images'
+import { deleteProductImage, uploadProductImage } from './images'
 import {
   deliveryOptionSchema,
   parseForm,
@@ -126,8 +127,11 @@ export async function saveProductAction(
     imageUrl = null
   }
 
+  const previous = id ? await getProduct(db, id) : null
   const savedId = await saveProduct(db, parsed.data, { id: id ?? undefined, imageUrl })
   if (!savedId) return { message: 'notFound' }
+  // A replaced or removed photo is no longer referenced anywhere: delete the file too.
+  if (imageUrl !== undefined && previous?.imageUrl) await deleteProductImage(previous.imageUrl)
   updateTag(SITE_CONTENT_TAG)
   redirect(`/admin/${l}/products?saved=1`)
 }
@@ -136,7 +140,9 @@ export async function deleteProductAction(lang: string, id: string): Promise<voi
   const l = locale(lang)
   const db = await guard(l)
   if (db) {
+    const product = await getProduct(db, id)
     await deleteProduct(db, id)
+    if (product?.imageUrl) await deleteProductImage(product.imageUrl)
     updateTag(SITE_CONTENT_TAG)
   }
   redirect(`/admin/${l}/products`)
