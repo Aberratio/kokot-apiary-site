@@ -40,7 +40,8 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[la
   return (
     <html lang={lang} className={sans.variable}>
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        {/* Lenis handles in-page anchor links; each section's scroll-margin-top clears the header. */}
+        <SmoothScroll options={{ anchors: true }}>{children}</SmoothScroll>
       </body>
     </html>
   )

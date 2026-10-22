@@ -3,6 +3,7 @@
   display: grid;
   place-items: center;
   min-height: 100vh;
+  min-height: 100svh;
   padding: 6rem var(--gutter);
   overflow: hidden;
   /* The light version: what everyone sees until, and unless, the scene mounts. */
@@ -25,7 +26,23 @@
 }
 
 .content h1 {
-  font-size: clamp(2.5rem, 8vw, 6rem);
+  font-size: clamp(2.75rem, 10vw, 7rem);
   line-height: 1;
   margin: 0 0 1rem;
+}
+
+.content p {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  margin: 0;
+}
+
+.hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.6);
 }

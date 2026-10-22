@@ -39,15 +39,6 @@ a {
   outline-offset: 2px;
 }
 
-.site-header {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 10;
-  display: flex;
-  justify-content: flex-end;
-  padding: 1rem var(--gutter);
-}
-
 /* Reduced motion: no animations or smooth scrolling anywhere, whatever a component sets. */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -1,8 +1,20 @@
-/** Polish UI copy. The source of truth for keys: `en` must match its shape. */
+/**
+ * Polish UI copy: labels and fixed texts. Content Franciszek edits (products, prices, the
+ * story) lives in the CMS, not here. This file defines the keys; `en` must match its shape.
+ */
 export const pl = {
   meta: {
-    title: 'Nowa strona',
-    description: 'Strona zbudowana na web-studio-starter.',
+    title: 'Pasieka Kokot: miód prosto z pasieki',
+    description: 'Miód z rodzinnej pasieki Franciszka Kokota. Zamów słoik lub napisz do nas.',
+  },
+  nav: {
+    label: 'Sekcje strony',
+    skipToContent: 'Przejdź do treści',
+    about: 'O pasiece',
+    process: 'Pszczoły',
+    offer: 'Oferta',
+    howToOrder: 'Jak zamówić',
+    order: 'Kontakt',
   },
   languageSwitch: {
     label: 'Język',
@@ -10,17 +22,59 @@ export const pl = {
     en: 'English',
   },
   hero: {
-    title: 'Nowa strona',
-    subtitle: 'Szablon z płynnym przewijaniem, shaderem i lekką wersją bez WebGL.',
+    scrollHint: 'Przewiń, aby poznać pasiekę',
   },
-  sections: {
-    first: {
-      title: 'Pierwsza sekcja',
-      body: 'Postęp przewijania tej sekcji steruje paskiem poniżej.',
+  about: {
+    title: 'O pasiece',
+    photoPlaceholder: 'Miejsce na zdjęcie',
+  },
+  process: {
+    title: 'Od roju do słoika',
+    intro: 'Jak powstaje miód, w trzech krokach.',
+    steps: {
+      swarm: {
+        title: 'Rój',
+        body: 'Pszczoły zbierają nektar z kwiatów w promieniu kilku kilometrów od ula.',
+      },
+      comb: {
+        title: 'Plaster',
+        body: 'W ulu nektar dojrzewa w woskowych komórkach, aż stanie się miodem.',
+      },
+      jar: {
+        title: 'Słoik',
+        body: 'Miód odwirowujemy z plastrów i rozlewamy do słoików, bez podgrzewania.',
+      },
     },
-    second: {
-      title: 'Druga sekcja',
-      body: 'Dodaj ?quality=light lub ?quality=full do adresu, aby wymusić wersję strony.',
-    },
+  },
+  offer: {
+    title: 'Oferta',
+    intro: 'Aktualne miody. Ceny zawierają VAT, koszt dostawy doliczamy osobno.',
+    available: 'Dostępny',
+    unavailable: 'Chwilowo niedostępny',
+    featured: 'Polecany',
+    size: 'Pojemność',
+    price: 'Cena',
+    photoPlaceholder: 'Zdjęcie produktu wkrótce',
+  },
+  howToOrder: {
+    title: 'Jak zamówić',
+    intro: 'Płatność przelewem po potwierdzeniu zamówienia. Nie przyjmujemy płatności online.',
+    paymentTitle: 'Dane do przelewu',
+    accountHolder: 'Odbiorca',
+    bankName: 'Bank',
+    accountNumber: 'Numer konta',
+    deliveryTitle: 'Dostawa',
+    free: 'Bezpłatnie',
+  },
+  order: {
+    title: 'Zamówienia i kontakt',
+    soon: 'Formularz zamówienia pojawi się tu wkrótce. Do tego czasu zamów mailowo lub telefonicznie.',
+    email: 'E-mail',
+    phone: 'Telefon',
+  },
+  footer: {
+    contactTitle: 'Kontakt',
+    socialTitle: 'Znajdź nas',
+    rights: 'Wszelkie prawa zastrzeżone.',
   },
 }
