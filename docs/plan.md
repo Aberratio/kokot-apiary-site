@@ -95,9 +95,9 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 5: polish and launch
 
-- [ ] SEO set (metadata, hreflang, OG image, sitemap, robots, JSON-LD).
-- [ ] Accessibility pass and Lighthouse check on mobile.
-- [ ] Handover note for Franciszek (in Polish, kept outside the repo): how to log in and edit the offer.
+- [x] SEO set (metadata, hreflang, OG image, sitemap, robots, JSON-LD).
+- [ ] Accessibility pass and Lighthouse check on mobile. (axe: no violations on /pl, /en, mobile, reduced motion, admin login. Local Lighthouse mobile: Accessibility, Best Practices and SEO 100, Performance 79–80, LCP 2.8 s simulated. The LCP target is checked on the Vercel preview.)
+- [x] Handover note for Franciszek (in Polish, kept outside the repo): how to log in and edit the offer. (Draft in `web-studio/handover/`; the site address and studio email are still placeholders.)
 
 ## Open questions
 

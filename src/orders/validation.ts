@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import { HONEYPOT_FIELD } from './honeypot'
+
+export { HONEYPOT_FIELD }
 
 /**
  * Public form validation. Messages are keys into the site dictionary's `forms.errors`, so the
@@ -30,9 +33,6 @@ export const contactSchema = z.object({
   message: required(3000),
 })
 export type ContactMessage = z.output<typeof contactSchema>
-
-/** Name of the hidden field bots fill in and people never see. */
-export const HONEYPOT_FIELD = 'website'
 
 export function isBot(formData: FormData): boolean {
   const value = formData.get(HONEYPOT_FIELD)

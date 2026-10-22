@@ -8,7 +8,7 @@ import type { Dictionary } from '@/i18n/dictionaries'
 import { formatPrice } from '@/lib/money'
 import type { PublicFormState } from '@/orders/actions'
 import { calculateOrder, MAX_QUANTITY } from '@/orders/calculate'
-import { HONEYPOT_FIELD } from '@/orders/validation'
+import { HONEYPOT_FIELD } from '@/orders/honeypot'
 import styles from './forms.module.css'
 
 type FormsCopy = Dictionary['forms']
