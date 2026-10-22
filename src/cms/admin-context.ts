@@ -46,6 +46,7 @@ export function deliveryToForm(row: typeof deliveryOptions.$inferSelect): Record
     descriptionPl: row.descriptionPl,
     descriptionEn: row.descriptionEn,
     priceGrosze: formatGroszeForInput(row.priceGrosze),
+    requiresAddress: flag(row.requiresAddress),
     enabled: flag(row.enabled),
     sortOrder: String(row.sortOrder),
   }

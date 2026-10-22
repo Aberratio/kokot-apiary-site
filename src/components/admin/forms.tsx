@@ -121,6 +121,7 @@ export function DeliveryForm({
           type="number"
         />
       </div>
+      <Checkbox {...field('requiresAddress')} label={t.requiresAddress} />
       <Checkbox {...field('enabled')} label={t.enabled} />
       <div className={styles.actions}>
         <SubmitButton>{dict.common.save}</SubmitButton>

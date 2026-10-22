@@ -1,7 +1,10 @@
 'use server'
 
 import { updateTag } from 'next/cache'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { clientIpFrom, consumeRateLimit, LIMITS, rateLimitKey } from '@/orders/rate-limit'
+import { ORDER_STATUSES, updateOrderStatus, type OrderStatus } from '@/orders/repo'
 import { logIn, logOut, requireAdmin } from '@/auth/session'
 import { SITE_CONTENT_TAG } from '@/content/server'
 import { getDb } from '@/db/client'
@@ -26,7 +29,7 @@ import {
 
 export interface FormState {
   errors?: Partial<Record<string, AdminErrorKey>>
-  message?: 'fixErrors' | 'notFound' | 'dbMissing' | 'wrongPassword' | 'notConfigured'
+  message?: 'fixErrors' | 'notFound' | 'dbMissing' | 'wrongPassword' | 'notConfigured' | 'tooMany'
   saved?: boolean
   /** What was submitted, so a form that failed validation keeps the user's input. */
   values?: Record<string, string>
@@ -66,6 +69,11 @@ export async function loginAction(
   if (!process.env.ADMIN_PASSWORD_HASH || !process.env.SESSION_SECRET) {
     return { message: 'notConfigured' }
   }
+  const db = getDb()
+  if (db) {
+    const key = rateLimitKey('login', clientIpFrom(await headers()))
+    if (!(await consumeRateLimit(db, key, LIMITS.login))) return { message: 'tooMany' }
+  }
   if (typeof password !== 'string' || !(await logIn(password))) {
     return { message: 'wrongPassword' }
   }
@@ -75,6 +83,22 @@ export async function loginAction(
 export async function logoutAction(lang: string): Promise<void> {
   await logOut()
   redirect(`/admin/${locale(lang)}/login`)
+}
+
+// Orders
+
+export async function updateOrderStatusAction(
+  lang: string,
+  id: string,
+  formData: FormData,
+): Promise<void> {
+  const l = locale(lang)
+  const db = await guard(l)
+  const status = formData.get('status')
+  if (db && ORDER_STATUSES.includes(status as OrderStatus)) {
+    await updateOrderStatus(db, id, status as OrderStatus)
+  }
+  redirect(`/admin/${l}/orders?saved=1`)
 }
 
 // Products

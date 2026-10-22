@@ -16,7 +16,8 @@ export default async function Page({ params }: PageProps<'/[lang]'>) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
   const dict = getDictionary(lang)
-  const { settings, products, paymentInfo, deliveryOptions } = await getSiteContent()
+  const content = await getSiteContent()
+  const { settings, products, paymentInfo, deliveryOptions } = content
 
   return (
     <>
@@ -36,7 +37,7 @@ export default async function Page({ params }: PageProps<'/[lang]'>) {
           delivery={deliveryOptions}
           dict={dict.howToOrder}
         />
-        <OrderSection settings={settings} dict={dict.order} />
+        <OrderSection locale={lang} content={content} dict={dict} />
       </main>
       <SiteFooter locale={lang} settings={settings} dict={dict} />
     </>

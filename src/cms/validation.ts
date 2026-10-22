@@ -78,6 +78,7 @@ export const deliveryOptionSchema = z.object({
   descriptionPl: text(500),
   descriptionEn: text(500),
   priceGrosze: price,
+  requiresAddress: checkbox,
   enabled: checkbox,
   sortOrder,
 })
