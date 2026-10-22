@@ -337,3 +337,10 @@
     height: 28rem;
   }
 }
+
+/* Contact links: a comfortable touch target (WCAG 2.5.8 asks for at least 24px). */
+.details a {
+  display: inline-block;
+  min-height: 1.75rem;
+  padding: 0.2rem 0;
+}

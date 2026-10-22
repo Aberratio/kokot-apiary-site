@@ -34,7 +34,7 @@ export function SiteFooter({ locale, settings, dict }: SiteFooterProps) {
         </ul>
       </div>
       <div>
-        <LanguageSwitch current={locale} labels={dict.languageSwitch} />
+        <LanguageSwitch current={locale} labels={dict.languageSwitch} landmark={false} />
       </div>
       <p className={styles.legal}>
         © {settings.apiaryName}. {dict.footer.rights}
