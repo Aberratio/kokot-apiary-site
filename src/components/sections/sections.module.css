@@ -105,9 +105,14 @@
 }
 
 .productPhoto {
+  position: relative;
   aspect-ratio: 1;
   background:
     radial-gradient(circle at 50% 60%, var(--accent) 0%, transparent 55%), var(--accent-deep);
+}
+
+.productPhoto img {
+  object-fit: cover;
 }
 
 .productBody {

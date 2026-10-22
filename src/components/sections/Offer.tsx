@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { localize, type Product } from '@/content'
 import type { Locale } from '@/i18n/config'
 import type { Dictionary } from '@/i18n/dictionaries'
@@ -19,7 +20,18 @@ export function Offer({ locale, products, dict }: OfferProps) {
       <ul className={styles.products}>
         {products.map((product) => (
           <li key={product.id} className={styles.product} data-available={product.available}>
-            <div className={styles.productPhoto} role="img" aria-label={dict.photoPlaceholder} />
+            {product.imageUrl ? (
+              <div className={styles.productPhoto}>
+                <Image
+                  src={product.imageUrl}
+                  alt={localize(product.imageAlt, locale)}
+                  fill
+                  sizes="(min-width: 68rem) 22rem, (min-width: 36rem) 50vw, 100vw"
+                />
+              </div>
+            ) : (
+              <div className={styles.productPhoto} role="img" aria-label={dict.photoPlaceholder} />
+            )}
             <div className={styles.productBody}>
               {product.featured && <span className={styles.badge}>{dict.featured}</span>}
               <h3>{localize(product.name, locale)}</h3>

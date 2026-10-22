@@ -1,11 +1,8 @@
 import { placeholderContent } from './placeholder'
 import type { SiteContent } from './types'
 
-/**
- * Everything the public page shows. Reads placeholders for now; Phase 2 swaps this for the
- * database without changing the callers.
- */
-export async function getSiteContent(): Promise<SiteContent> {
+/** The placeholder content in the shape the page renders: sorted, disabled options left out. */
+export function placeholderSiteContent(): SiteContent {
   const content = placeholderContent
   return {
     ...content,

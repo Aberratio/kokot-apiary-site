@@ -1,5 +1,5 @@
 import 'lenis/dist/lenis.css'
-import '../globals.css'
+import '../../globals.css'
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import { notFound } from 'next/navigation'

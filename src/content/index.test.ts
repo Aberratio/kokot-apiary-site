@@ -1,9 +1,9 @@
-import { getSiteContent } from '.'
+import { placeholderSiteContent } from '.'
 import { placeholderContent } from './placeholder'
 
-describe('getSiteContent', () => {
+describe('placeholderSiteContent', () => {
   it('sorts products by their sort order', async () => {
-    const { products } = await getSiteContent()
+    const { products } = placeholderSiteContent()
     const orders = products.map((p) => p.sortOrder)
     expect(orders).toEqual([...orders].sort((a, b) => a - b))
   })
@@ -12,7 +12,7 @@ describe('getSiteContent', () => {
     const original = placeholderContent.deliveryOptions
     placeholderContent.deliveryOptions = original.map((o, i) => ({ ...o, enabled: i !== 0 }))
     try {
-      const { deliveryOptions } = await getSiteContent()
+      const { deliveryOptions } = placeholderSiteContent()
       expect(deliveryOptions.map((o) => o.id)).not.toContain(original[0]!.id)
     } finally {
       placeholderContent.deliveryOptions = original
