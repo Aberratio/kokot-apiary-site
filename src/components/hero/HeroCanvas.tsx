@@ -1,12 +1,24 @@
 'use client'
 
-import { Canvas } from '@react-three/fiber'
-import { useEffect, useRef } from 'react'
-import { ShaderPlane } from 'web-studio-kit'
+import { useEffect, useMemo, useRef } from 'react'
+import {
+  fluidFragmentShader,
+  fluidUniforms,
+  PostFX,
+  SceneCanvas,
+  ShaderPlane,
+} from 'web-studio-kit'
 
-/** Full-screen shader behind the hero. `uScroll` goes from 0 to 1 over the first screen. */
+/** Honey colours for the kit's fluid shader. */
+const HONEY = { deep: '#2e1402', mid: '#c27410', highlight: '#ffd889' }
+
+/**
+ * Flowing honey behind the hero: thick, slow, pushed around by the pointer, darkening as the
+ * page scrolls. `uScroll` goes from 0 to 1 over the first screen.
+ */
 export default function HeroCanvas() {
   const scroll = useRef(0)
+  const uniforms = useMemo(() => fluidUniforms(HONEY, { viscosity: 1.6, distortion: 1.2 }), [])
 
   useEffect(() => {
     const update = () => {
@@ -18,9 +30,9 @@ export default function HeroCanvas() {
   }, [])
 
   return (
-    // A capped pixel ratio keeps a full-screen fragment shader affordable on dense screens.
-    <Canvas dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: 'high-performance' }}>
-      <ShaderPlane scroll={scroll} />
-    </Canvas>
+    <SceneCanvas>
+      <ShaderPlane fragmentShader={fluidFragmentShader} uniforms={uniforms} scroll={scroll} />
+      <PostFX bloom={0.45} bloomThreshold={0.72} grain={0.05} />
+    </SceneCanvas>
   )
 }
