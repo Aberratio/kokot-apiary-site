@@ -6,21 +6,21 @@ A one-page website for Franciszek Kokot's apiary that feels modern and creative:
 
 ## Decisions
 
-| Topic | Decision |
-|---|---|
-| Framework | Next.js (App Router) + TypeScript, hosted on Vercel |
+| Topic          | Decision                                                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework      | Next.js (App Router) + TypeScript, hosted on Vercel                                                                                            |
 | 3D and effects | three.js, @react-three/fiber, @react-three/drei, postprocessing, custom GLSL, GSAP (incl. ScrollTrigger and SplitText, free since 2025), Lenis |
-| Paid libraries | None. Every dependency must be free and open source |
-| Shared code | Reusable effects go to `web-studio-kit`, installed as a pinned git dependency (`github:aberratio/web-studio-kit#vX.Y.Z`) |
-| CMS | Custom, built into this app under `/admin`. Single admin user (Franciszek) |
-| Database | Postgres on the free Neon tier (Vercel Marketplace), Drizzle ORM |
-| Images | Vercel Blob, served through `next/image` |
-| Auth | One admin account: password hash in env, signed httpOnly session cookie. No third-party auth service |
-| Email | Resend free tier, sent from a server action or route handler |
-| Languages | Polish by default, English switch. Every CMS text field has a PL and an EN value |
-| Ordering | CMS flag `orderMode`: `form` (order form) or `contact` (contact form only). Both must work |
-| Domain | `*.vercel.app` for now |
-| Content | Nothing exists yet. Use placeholder photos, copy and prices, all replaceable from the CMS |
+| Paid libraries | None. Every dependency must be free and open source                                                                                            |
+| Shared code    | Reusable effects go to `web-studio-kit`, installed as a pinned git dependency (`github:aberratio/web-studio-kit#vX.Y.Z`)                       |
+| CMS            | Custom, built into this app under `/admin`. Single admin user (Franciszek)                                                                     |
+| Database       | Postgres on the free Neon tier (Vercel Marketplace), Drizzle ORM                                                                               |
+| Images         | Vercel Blob, served through `next/image`                                                                                                       |
+| Auth           | One admin account: password hash in env, signed httpOnly session cookie. No third-party auth service                                           |
+| Email          | Resend free tier, sent from a server action or route handler                                                                                   |
+| Languages      | Polish by default, English switch. Every CMS text field has a PL and an EN value                                                               |
+| Ordering       | CMS flag `orderMode`: `form` (order form) or `contact` (contact form only). Both must work                                                     |
+| Domain         | `*.vercel.app` for now                                                                                                                         |
+| Content        | Nothing exists yet. Use placeholder photos, copy and prices, all replaceable from the CMS                                                      |
 
 ## Page sections (one page, scroll-driven)
 
@@ -64,9 +64,9 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 1: site skeleton
 
-- [ ] Bring the starter into this repo, deploy to Vercel, confirm the preview URL works.
-- [ ] One-page layout with all seven sections, placeholder content, language switch.
-- [ ] Smooth scroll and per-section scroll progress.
+- [ ] Bring the starter into this repo, deploy to Vercel, confirm the preview URL works. (Starter brought in; the deploy waits for the owner to approve a Vercel project and plan.)
+- [x] One-page layout with all seven sections, placeholder content, language switch.
+- [x] Smooth scroll and per-section scroll progress.
 
 ### Phase 2: CMS and data
 

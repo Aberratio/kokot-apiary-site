@@ -1,0 +1,36 @@
+.footer {
+  display: grid;
+  gap: 2rem;
+  padding: 4rem var(--gutter) 2rem;
+  border-top: 1px solid rgb(255 255 255 / 0.1);
+  background: #0b0703;
+}
+
+@media (min-width: 48rem) {
+  .footer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.footer h2 {
+  font-size: 1rem;
+  color: var(--fg-muted);
+  margin: 0 0 0.75rem;
+}
+
+.footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer li + li {
+  margin-top: 0.25rem;
+}
+
+.legal {
+  grid-column: 1 / -1;
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+  margin: 0;
+}

@@ -1,0 +1,58 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gutter);
+  background: linear-gradient(to bottom, rgb(18 12 6 / 0.85), rgb(18 12 6 / 0));
+}
+
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+/* On phones the brand and the language switch are enough; sections are a scroll away. */
+.nav {
+  display: none;
+}
+
+.nav ul {
+  display: flex;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav a {
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--fg);
+}
+
+@media (min-width: 60rem) {
+  .nav {
+    display: block;
+  }
+}
+
+.skip {
+  position: absolute;
+  left: var(--gutter);
+  top: -3rem;
+  padding: 0.5rem 1rem;
+  background: var(--fg);
+  color: var(--bg);
+  border-radius: 0.25rem;
+}
+
+.skip:focus {
+  top: 0.5rem;
+}
