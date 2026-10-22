@@ -59,8 +59,8 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 
 ### Phase 0: foundations (kit and starter)
 
-- [ ] Scaffold `web-studio-kit`: React + TypeScript library build, peer deps (react, three, @react-three/fiber), first exports: `<SmoothScroll>` (Lenis + GSAP ticker), `useScrollProgress`, `<ShaderPlane>` (fullscreen GLSL with time, mouse and scroll uniforms), `useQualityTier` (light / full detection). Tag `v0.1.0`.
-- [ ] Scaffold `web-studio-starter`: Next.js App Router + TypeScript, i18n routing (`/pl`, `/en`, default `pl`), kit installed from its tag, light-mode fallback wiring, ESLint + Prettier, Vitest. README explains the new-client-site flow.
+- [x] Scaffold `web-studio-kit`: React + TypeScript library build, peer deps (react, three, @react-three/fiber), first exports: `<SmoothScroll>` (Lenis + GSAP ticker), `useScrollProgress`, `<ShaderPlane>` (fullscreen GLSL with time, mouse and scroll uniforms), `useQualityTier` (light / full detection). Tag `v0.1.0`. (aberratio/web-studio-kit#1)
+- [x] Scaffold `web-studio-starter`: Next.js App Router + TypeScript, i18n routing (`/pl`, `/en`, default `pl`), kit installed from its tag, light-mode fallback wiring, ESLint + Prettier, Vitest. README explains the new-client-site flow. (aberratio/web-studio-starter#1)
 
 ### Phase 1: site skeleton
 
