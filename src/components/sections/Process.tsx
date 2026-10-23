@@ -1,6 +1,6 @@
 import { KineticText, QualityGate } from 'web-studio-kit'
 import type { Dictionary } from '@/i18n/dictionaries'
-import { HoneycombIllustration } from '../process/HoneycombIllustration'
+import { CombStill } from '../process/CombStill'
 import { ProcessScene } from '../process/ProcessScene'
 import { Section } from '../Section'
 import styles from './sections.module.css'
@@ -11,7 +11,7 @@ interface ProcessProps {
 
 /**
  * The swarm, comb and jar steps scroll past a sticky stage where particles morph through the
- * same three shapes. In light mode the stage shows a static honeycomb.
+ * same three shapes. In light mode the stage shows a rendered comb.
  */
 export function Process({ dict }: ProcessProps) {
   const steps = [dict.steps.swarm, dict.steps.comb, dict.steps.jar]
@@ -23,7 +23,10 @@ export function Process({ dict }: ProcessProps) {
       <p className={styles.lead}>{dict.intro}</p>
       <div className={styles.processLayout}>
         <div className={styles.stage}>
-          <QualityGate className={styles.stageInner} fallback={<HoneycombIllustration />}>
+          <QualityGate
+            className={styles.stageInner}
+            fallback={<CombStill className={styles.stageStill} />}
+          >
             <ProcessScene />
           </QualityGate>
         </div>

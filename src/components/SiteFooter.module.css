@@ -1,9 +1,14 @@
 .footer {
   display: grid;
   gap: 2rem;
-  padding: 4rem var(--gutter) 2rem;
-  border-top: 1px solid rgb(255 255 255 / 0.1);
-  background: #0b0703;
+  padding: 4rem max(var(--gutter), calc((100% - 68rem) / 2)) 2rem;
+  /* The last of the light: a low glow along the bottom edge, and a rim of light on top. */
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, rgb(255 193 100 / 0.4), transparent) 1;
+  background:
+    var(--grain),
+    radial-gradient(ellipse 60rem 18rem at 50% 115%, rgb(255 190 95 / 0.16), transparent 70%),
+    var(--night);
 }
 
 @media (min-width: 48rem) {

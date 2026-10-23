@@ -24,7 +24,12 @@ export const en: Dictionary = {
   },
   about: {
     title: 'About the apiary',
-    photoPlaceholder: 'Photo coming soon',
+    // Alt text for the rendered placeholder images, until real photos replace them.
+    photos: {
+      comb: 'A honeycomb in a wooden frame, lit by a low sun',
+      dipper: 'Honey running off a wooden dipper into a jar',
+      hive: 'A wooden beehive at dusk, against the light',
+    },
   },
   process: {
     title: 'From swarm to jar',
@@ -52,7 +57,6 @@ export const en: Dictionary = {
     featured: 'Featured',
     size: 'Size',
     price: 'Price',
-    photoPlaceholder: 'Product photo coming soon',
   },
   howToOrder: {
     title: 'How to order',
