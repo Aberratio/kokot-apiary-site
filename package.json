@@ -15,7 +15,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --env-file-if-exists=.env.local scripts/db-migrate.mts",
     "db:seed": "tsx --env-file-if-exists=.env.local scripts/db-seed.mts",
-    "admin:hash": "tsx scripts/admin-hash.mts"
+    "admin:hash": "tsx scripts/admin-hash.mts",
+    "assets:build": "tsx scripts/build-assets.mts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.11",
@@ -46,8 +47,10 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "eslint-config-prettier": "^10.1.8",
+    "gltfpack": "^1.3.0",
     "jsdom": "^30.1.3",
     "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
     "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.5"

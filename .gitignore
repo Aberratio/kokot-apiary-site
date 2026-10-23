@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# blender renders (rebuilt by npm run assets:build)
+/blender/build/
+/blender/__pycache__/

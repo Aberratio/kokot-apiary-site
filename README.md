@@ -48,3 +48,24 @@ npm run admin:hash -- "<a long password>"
 This prints `ADMIN_PASSWORD_HASH` and a fresh `SESSION_SECRET`; set both as environment variables. The session is a signed, httpOnly cookie that lasts a week. Every admin page and every Server Action checks it.
 
 Saving in the admin refreshes the public page immediately: the page's content is cached under the `site-content` tag, and every save calls `updateTag`.
+
+## Graphics (Blender)
+
+Every rendered still and the jar model are built from Python scripts in `blender/`, so each asset can be rebuilt from source. There are no hand-made `.blend` files.
+
+| File                    | What it does                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------- |
+| `blender/common.py`     | The shared look: the hero's palette, the warm backlight rig, bokeh, materials |
+| `blender/geometry.py`   | Procedural models: honey jar, dipper, honey drip, comb and frame, hive        |
+| `blender/stills.py`     | One scene per still (`jar`, `product-*`, `about-*`, `process-comb`), Cycles   |
+| `blender/export_jar.py` | The jar as three named meshes (Glass, Honey, Lid) in a `.glb`                 |
+
+```sh
+npm run assets:build                                   # render, encode and compress everything (about 20 min on 16 cores)
+npm run assets:build -- --only about-hive --samples 64 # one still, quicker
+npm run assets:build -- --skip-render                  # re-encode the existing renders only
+```
+
+It needs Blender 5.2 (`BLENDER` env var, else the default Windows install path, else `blender` on `PATH`). Renders land in `blender/build/` (not committed). `scripts/build-assets.mts` encodes each still as AVIF and WebP at the widths listed in `src/lib/stills.ts` into `public/stills/`, and compresses the model with gltfpack (Meshopt) into `public/models/jar.glb`.
+
+Budgets, checked by `src/lib/stills.test.ts`: jar model 60 KB or less (now 38 KB); stills 35 KB per file at phone widths and 50 KB at desktop widths, 45 and 90 KB for the jar and the comb (now 4 to 37 KB as AVIF).
