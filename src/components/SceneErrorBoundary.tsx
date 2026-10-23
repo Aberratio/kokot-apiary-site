@@ -9,7 +9,7 @@ interface SceneErrorBoundaryProps {
 }
 
 /**
- * Keeps a failing 3D scene (a model that does not download or decode, a lost WebGL context)
+ * Keeps a failing 3D scene (a model that does not download or decode, a shader that fails)
  * from taking the page down with it: R3F re-throws errors from inside the canvas into the
  * React tree above it.
  */
