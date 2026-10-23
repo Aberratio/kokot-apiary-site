@@ -115,7 +115,7 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 - [x] The Blender jar (Meshopt `.glb`, 38 KB) replaces the lathe jar, lit by the kit's new `BacklitEnvironment` (v0.4.0); its glass and honey are shaders matched to the rendered still.
 - [x] Rendered stills as placeholders for About and the product cards, and as the light-mode fallbacks of the jar and particle scenes. They load after the page and near the viewport only.
 - [x] Local Lighthouse mobile against main on the same machine (median of 5 runs per page): LCP 2.64 s on both pages against 2.65 s on main, the same bytes before LCP, CLS 0. axe: no violations.
-- [x] Live Lighthouse mobile after merge: LCP under 2.5 s on `/pl` and `/en`. (Warm cache, median of 5 runs per page: `/pl` 1.76 s, `/en` 1.83 s; the first run of each, against a colder cache, 2.60 s and 2.21 s. Performance 93 and 96, CLS 0, Accessibility, Best Practices and SEO 100. No still or model is requested during the run.)
+- [x] Live Lighthouse mobile after merge: LCP under 2.5 s on `/pl` and `/en`. (After a few warm-up requests, median of 5 runs per page: `/pl` 1.76 s, `/en` 1.83 s; the first run of each was the slowest, 2.60 s and 2.21 s. Performance 93 and 96, CLS 0, Accessibility, Best Practices and SEO 100. No still or model is requested during the run.)
 
 ## Open questions
 
