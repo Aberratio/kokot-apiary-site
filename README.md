@@ -68,4 +68,4 @@ npm run assets:build -- --skip-render                  # re-encode the existing 
 
 It needs Blender 5.2 (`BLENDER` env var, else the default Windows install path, else `blender` on `PATH`). Renders land in `blender/build/` (not committed). `scripts/build-assets.mts` encodes each still as AVIF and WebP at the widths listed in `src/lib/stills.ts` into `public/stills/`, and compresses the model with gltfpack (Meshopt) into `public/models/jar.glb`.
 
-Budgets, checked by `src/lib/stills.test.ts`: jar model 60 KB or less (now 38 KB); stills 35 KB per file at phone widths and 50 KB at desktop widths, 45 and 90 KB for the jar and the comb (now 4 to 37 KB as AVIF).
+Budgets, checked by `src/lib/stills.test.ts`: jar model 60 KB or less (now 38 KB); stills 35 KB per file at phone widths and 50 KB at desktop widths, 45 and 90 KB for the jar and the comb (now 4 to 37 KB as AVIF). Stills load only after the page's load event and when they near the viewport (`LazyStill`), so nothing is fetched before the hero title paints.

@@ -30,8 +30,8 @@ export default function ProcessCanvas() {
       <SceneCanvas camera={{ position: [0, 0, 5], fov: 45 }} flat>
         {/* Post-processing outputs an opaque image, so the scene paints the page colour; `flat`
             turns tone mapping off so that colour comes out exactly as the page has it. */}
-        <color attach="background" args={['#120c06']} />
-        <ParticleMorph shapes={shapes} progress={morph} color="#ffbe4d" size={22} />
+        <color attach="background" args={['#0c0703']} />
+        <ParticleMorph shapes={shapes} progress={morph} color="#ffc164" size={24} />
         <PostFX bloom={0.9} bloomThreshold={0.2} grain={0} />
       </SceneCanvas>
     </div>

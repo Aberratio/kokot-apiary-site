@@ -1,11 +1,30 @@
+/*
+ * One visual language, taken from the hero: a warm night, a low sun that backlights things,
+ * amber honey, walnut, bokeh and grain. The hero's scene colours (HeroCanvas.tsx) are the
+ * palette; everything below the hero is lit by the same light.
+ */
 :root {
-  --bg: #120c06;
+  --night: #0c0703;
+  --honey: #f6a91f;
+  --honey-deep: #6e2a03;
+  --wood: #9a6634;
+  --sun: #ffc164;
+
+  --bg: var(--night);
   --fg: #fbf3e6;
-  --fg-muted: #c9b9a2;
-  --accent: #b9771e;
-  --accent-deep: #5a3510;
+  --fg-muted: #cdb79a;
+  --accent: var(--honey);
   --focus: #ffd27a;
   --gutter: 1rem;
+
+  /* Surfaces: dark warm glass with a rim of light (sections.module.css builds --surface-rim
+     per section, brightest on the side its sun is on). */
+  --surface-fill: linear-gradient(180deg, #1a0f07, #0f0804);
+  --surface-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.9), 0 0 60px -24px rgb(246 169 31 / 0.12);
+  --radius: 1.25rem;
+
+  /* Film grain as a tiny tile: warm specks in the alpha channel, so it needs no blend mode. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.85 0 0 0 0 0.6 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   color-scheme: dark;
 }
 

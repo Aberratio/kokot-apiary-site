@@ -4,9 +4,11 @@ import type { Locale } from '@/i18n/config'
 import type { Dictionary } from '@/i18n/dictionaries'
 import { formatPrice } from '@/lib/money'
 import { KineticText, QualityGate } from 'web-studio-kit'
-import { JarIllustration } from '../jar/JarIllustration'
+import { productStill } from '@/lib/stills'
+import { JarStill } from '../jar/JarStill'
 import { JarScene } from '../jar/JarScene'
 import { Section } from '../Section'
+import { LazyStill } from '../stills/LazyStill'
 import styles from './sections.module.css'
 
 interface OfferProps {
@@ -20,7 +22,7 @@ export function Offer({ locale, products, dict }: OfferProps) {
   const featured =
     products.find((p) => p.featured && p.available) ?? products.find((p) => p.available)
   return (
-    <Section id="offer" labelledBy="offer-title" className={styles.section}>
+    <Section id="offer" labelledBy="offer-title" className={styles.section} light="left">
       <KineticText as="h2" id="offer-title">
         {dict.title}
       </KineticText>
@@ -28,8 +30,11 @@ export function Offer({ locale, products, dict }: OfferProps) {
       {featured && (
         <div className={styles.featured}>
           <div className={styles.featuredStage}>
-            <QualityGate fallback={<JarIllustration />}>
-              <JarScene />
+            <QualityGate
+              className={styles.featuredGate}
+              fallback={<JarStill className={styles.featuredStill} />}
+            >
+              <JarScene fallback={<JarStill className={styles.featuredStill} />} />
             </QualityGate>
           </div>
           <div>
@@ -43,7 +48,7 @@ export function Offer({ locale, products, dict }: OfferProps) {
         </div>
       )}
       <ul className={styles.products}>
-        {products.map((product) => (
+        {products.map((product, index) => (
           <li key={product.id} className={styles.product} data-available={product.available}>
             {product.imageUrl ? (
               <div className={styles.productPhoto}>
@@ -55,7 +60,14 @@ export function Offer({ locale, products, dict }: OfferProps) {
                 />
               </div>
             ) : (
-              <div className={styles.productPhoto} role="img" aria-label={dict.photoPlaceholder} />
+              // A rendered jar until Franciszek uploads a photo of this product.
+              <LazyStill
+                name={productStill(index)}
+                // The product's name, not its photo alt: that may describe a removed photo.
+                alt={localize(product.name, locale)}
+                className={styles.productPhoto}
+                sizes="(min-width: 68rem) 21rem, (min-width: 36rem) 50vw, 100vw"
+              />
             )}
             <div className={styles.productBody}>
               {product.featured && <span className={styles.badge}>{dict.featured}</span>}

@@ -1,34 +1,114 @@
+/*
+ * Every section is a stretch of the hero's night with its own low sun at the top. Sections
+ * alternate the sun between right and left (`data-light`, set by Section), and surfaces take
+ * their rim of light from the same side. Bokeh and grain are CSS only: nothing is downloaded.
+ */
 .section {
-  max-width: 68rem;
-  margin: 0 auto;
-  padding: 7rem var(--gutter) 5rem;
+  --sun-x: 92%;
+  --rim-angle: 205deg;
+  /* Built here, not on :root: a custom property resolves var() where it is declared, so a
+     :root rim would keep the root's angle in every section. */
+  --surface-rim: linear-gradient(
+    var(--rim-angle),
+    rgb(255 193 100 / 0.55),
+    rgb(255 193 100 / 0.1) 30%,
+    rgb(255 193 100 / 0.03) 65%,
+    rgb(255 193 100 / 0.16)
+  );
+  position: relative;
+  padding-block: 7rem 5rem;
+  /* Full-bleed background, content in a 68rem column. */
+  padding-inline: max(var(--gutter), calc((100% - 68rem) / 2));
   scroll-margin-top: 4rem;
+  background:
+    var(--grain),
+    radial-gradient(circle at 8% 22%, rgb(255 207 135 / 0.1) 0 1.4rem, transparent 2rem),
+    radial-gradient(circle at 16% 66%, rgb(255 207 135 / 0.07) 0 2.4rem, transparent 3.2rem),
+    radial-gradient(circle at 93% 46%, rgb(255 207 135 / 0.08) 0 1.8rem, transparent 2.5rem),
+    radial-gradient(circle at 80% 88%, rgb(255 207 135 / 0.06) 0 3rem, transparent 3.8rem),
+    radial-gradient(
+      ellipse 70rem 46rem at var(--sun-x) -4%,
+      rgb(255 190 95 / 0.22),
+      rgb(224 150 45 / 0.07) 40%,
+      transparent 70%
+    ),
+    linear-gradient(to bottom, var(--night), #120a04 50%, var(--night));
+}
+
+.section[data-light='left'] {
+  --sun-x: 8%;
+  --rim-angle: 155deg;
+  background:
+    var(--grain),
+    radial-gradient(circle at 90% 18%, rgb(255 207 135 / 0.09) 0 1.6rem, transparent 2.2rem),
+    radial-gradient(circle at 84% 70%, rgb(255 207 135 / 0.06) 0 2.8rem, transparent 3.6rem),
+    radial-gradient(circle at 6% 74%, rgb(255 207 135 / 0.07) 0 2.6rem, transparent 3.4rem),
+    radial-gradient(
+      ellipse 70rem 46rem at var(--sun-x) -4%,
+      rgb(255 190 95 / 0.2),
+      rgb(224 150 45 / 0.06) 40%,
+      transparent 70%
+    ),
+    linear-gradient(to bottom, var(--night), #120a04 50%, var(--night));
 }
 
 .section h2 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1.05;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
   margin: 0 0 1rem;
+  text-shadow: 0 0 48px rgb(255 170 60 / 0.28);
 }
 
 .lead {
   max-width: 40rem;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--fg-muted);
   margin: 0 0 2.5rem;
 }
 
-/* About: photo placeholders that rise in with the section's scroll progress. */
+/* A surface: dark warm glass with a rim of light (see --surface-* in globals.css). */
+.photo,
+.product,
+.featured,
+.panel {
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background:
+    var(--surface-fill) padding-box,
+    var(--surface-rim) border-box;
+  box-shadow: var(--surface-shadow);
+}
+
+/* Rendered stills: they fade in once decoded, over the surface's own dark fill. */
+.photo img,
+.productPhoto img,
+.featuredStill img,
+.stageStill img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.8s ease-out;
+}
+
+.photo img[data-shown='false'],
+.productPhoto img[data-shown='false'],
+.featuredStill img[data-shown='false'],
+.stageStill img[data-shown='false'] {
+  opacity: 0;
+}
+
+/* About: three stills that rise in with the section's scroll progress. */
 .photos {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 }
 
 .photo {
   aspect-ratio: 4 / 5;
-  border-radius: 0.5rem;
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.08), transparent 60%), var(--accent-deep);
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -48,180 +128,6 @@
   }
 }
 
-/* Process */
-.steps {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: step;
-}
-
-.steps li {
-  counter-increment: step;
-  padding: 1.5rem;
-  border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: 0.5rem;
-}
-
-.steps li::before {
-  content: counter(step, decimal-leading-zero);
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.steps h3 {
-  margin: 0.5rem 0;
-}
-
-.steps p {
-  margin: 0;
-  color: var(--fg-muted);
-}
-
-/* Offer */
-.products {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.product {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-radius: 0.5rem;
-  background: rgb(255 255 255 / 0.04);
-  border: 1px solid rgb(255 255 255 / 0.1);
-}
-
-.product[data-available='false'] {
-  opacity: 0.65;
-}
-
-.productPhoto {
-  position: relative;
-  aspect-ratio: 1;
-  background:
-    radial-gradient(circle at 50% 60%, var(--accent) 0%, transparent 55%), var(--accent-deep);
-}
-
-.productPhoto img {
-  object-fit: cover;
-}
-
-.productBody {
-  padding: 1.25rem;
-}
-
-.productBody h3 {
-  margin: 0 0 0.5rem;
-}
-
-.productBody p {
-  margin: 0 0 1rem;
-  color: var(--fg-muted);
-}
-
-.badge {
-  display: inline-block;
-  margin-bottom: 0.5rem;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--bg);
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.facts {
-  display: flex;
-  gap: 2rem;
-  margin: 0 0 1rem;
-}
-
-.facts dt {
-  font-size: 0.8rem;
-  color: var(--fg-muted);
-}
-
-.facts dd {
-  margin: 0;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.availability {
-  font-size: 0.9rem;
-}
-
-/* How to order */
-.columns {
-  display: grid;
-  gap: 2.5rem;
-}
-
-@media (min-width: 48rem) {
-  .columns {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.columns h3 {
-  margin: 0 0 1rem;
-}
-
-.details {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.5rem 1.5rem;
-  margin: 0 0 1rem;
-}
-
-.details dt {
-  color: var(--fg-muted);
-}
-
-.details dd {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.accountNumber {
-  font-variant-numeric: tabular-nums;
-}
-
-.delivery {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.delivery li {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.25rem 1rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgb(255 255 255 / 0.1);
-}
-
-.delivery p {
-  flex-basis: 100%;
-  margin: 0;
-  color: var(--fg-muted);
-}
-
-.direct {
-  margin: 3rem 0 1rem;
-  color: var(--fg-muted);
-}
-
 /* Process: steps scroll past a sticky stage. */
 .processLayout {
   position: relative;
@@ -239,15 +145,20 @@
 .stageInner {
   width: 100%;
   height: 100%;
-  /* Bloom lifts the whole frame a little; fading the edges hides the canvas rectangle. */
-  mask-image: radial-gradient(closest-side, #000 75%, transparent 100%);
+  /* Fades the edges into the night, for the particles' canvas and the still alike. */
+  mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+}
+
+.stageStill {
+  width: 100%;
+  height: 100%;
 }
 
 .processSteps {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 40vh;
+  gap: 32vh;
   margin: 0;
   padding: 0 0 20vh;
   list-style: none;
@@ -256,14 +167,18 @@
 .processSteps li {
   max-width: 26rem;
   padding: 1.5rem;
-  border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: 0.5rem;
-  background: rgb(18 12 6 / 0.88);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  /* Over the stage on phones, so mostly opaque: the text must stay readable over the comb. */
+  background:
+    linear-gradient(180deg, rgb(26 15 7 / 0.92), rgb(15 8 4 / 0.92)) padding-box,
+    var(--surface-rim) border-box;
+  box-shadow: var(--surface-shadow);
 }
 
 .processSteps h3 {
   margin: 0.5rem 0;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
 }
 
 .processSteps p {
@@ -272,8 +187,9 @@
 }
 
 .stepNumber {
-  color: var(--accent);
+  color: var(--honey);
   font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 @media (min-width: 60rem) {
@@ -296,46 +212,254 @@
   }
 
   .processSteps li {
-    background: transparent;
+    background: none;
     border: 0;
+    box-shadow: none;
     padding: 0;
+  }
+
+  .processSteps h3 {
+    font-size: 2.2rem;
   }
 }
 
-/* Offer: the featured product, presented as a 3D jar. */
+/* Offer: the featured product, presented as a 3D jar in front of its own sun. */
 .featured {
   display: grid;
   gap: 2rem;
   align-items: center;
   margin-bottom: 3rem;
+  padding: 1rem;
 }
 
 .featuredStage {
-  height: 22rem;
+  height: 24rem;
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 0.25rem);
+  /* The backlight the scene's jar stands against; the still has the same glow rendered in. */
+  background:
+    radial-gradient(
+      circle at 62% 34%,
+      rgb(255 179 71 / 0.55),
+      rgb(224 140 40 / 0.18) 34%,
+      transparent 62%
+    ),
+    var(--night);
 }
 
-.featuredStage > div {
+.featuredGate,
+.featuredStill {
   width: 100%;
   height: 100%;
 }
 
 .featured h3 {
   margin: 0.5rem 0;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
 }
 
 .featured p {
   color: var(--fg-muted);
 }
 
+.featured strong {
+  color: var(--sun);
+}
+
 @media (min-width: 48rem) {
   .featured {
     grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    padding: 1.5rem;
   }
 
   .featuredStage {
     height: 28rem;
   }
+}
+
+.products {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.product[data-available='false'] {
+  opacity: 0.65;
+}
+
+.productPhoto {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  background: var(--night);
+}
+
+/* CMS photos (next/image) cover the box too. */
+.productPhoto > img {
+  object-fit: cover;
+}
+
+/* The photo fades into the card. */
+.productPhoto::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 30%;
+  background: linear-gradient(transparent, #170d06);
+  pointer-events: none;
+}
+
+.productBody {
+  padding: 1.5rem;
+}
+
+.productBody h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+}
+
+.productBody p {
+  margin: 0 0 1rem;
+  color: var(--fg-muted);
+}
+
+/* A small lit drop of honey. */
+.badge {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffd58a, var(--honey) 55%, #d98a12);
+  color: #2a1203;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow:
+    0 0 18px rgb(246 169 31 / 0.4),
+    inset 0 1px 0 rgb(255 245 215 / 0.8);
+}
+
+.facts {
+  display: flex;
+  gap: 2rem;
+  margin: 0 0 1rem;
+}
+
+.facts dt {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--sun);
+}
+
+.availability {
+  font-size: 0.9rem;
+}
+
+/* How to order: two lit panels. */
+.columns {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 48rem) {
+  .columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.panel {
+  min-width: 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.panel h3 {
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+}
+
+.panel > p {
+  margin: 0;
+  color: var(--fg-muted);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1.5rem;
+  margin: 0 0 1rem;
+}
+
+.details dt {
+  color: var(--fg-muted);
+}
+
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The one thing people copy from this section. */
+.accountNumber {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--sun);
+  letter-spacing: 0.02em;
+}
+
+.delivery {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.delivery li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgb(255 193 100 / 0.12);
+}
+
+.delivery li:first-child {
+  padding-top: 0;
+}
+
+.delivery li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.delivery span {
+  color: var(--sun);
+  font-variant-numeric: tabular-nums;
+}
+
+.delivery p {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--fg-muted);
+}
+
+.direct {
+  margin: 3rem 0 1rem;
+  color: var(--fg-muted);
 }
 
 /* Contact links: a comfortable touch target (WCAG 2.5.8 asks for at least 24px). */

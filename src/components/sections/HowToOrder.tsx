@@ -21,7 +21,7 @@ export function HowToOrder({ locale, payment, delivery, dict }: HowToOrderProps)
       </KineticText>
       <p className={styles.lead}>{dict.intro}</p>
       <div className={styles.columns}>
-        <div>
+        <div className={styles.panel}>
           <h3>{dict.paymentTitle}</h3>
           <dl className={styles.details}>
             <dt>{dict.accountHolder}</dt>
@@ -33,7 +33,7 @@ export function HowToOrder({ locale, payment, delivery, dict }: HowToOrderProps)
           </dl>
           <p>{localize(payment.transferTitleHint, locale)}</p>
         </div>
-        <div>
+        <div className={styles.panel}>
           <h3>{dict.deliveryTitle}</h3>
           <ul className={styles.delivery}>
             {delivery.map((option) => (

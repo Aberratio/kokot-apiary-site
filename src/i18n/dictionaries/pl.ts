@@ -26,7 +26,12 @@ export const pl = {
   },
   about: {
     title: 'O pasiece',
-    photoPlaceholder: 'Miejsce na zdjęcie',
+    // Alt text for the rendered placeholder images, until real photos replace them.
+    photos: {
+      comb: 'Plaster miodu w drewnianej ramce, podświetlony nisko stojącym słońcem',
+      dipper: 'Miód spływający z drewnianej łyżki do słoika',
+      hive: 'Drewniany ul o zmierzchu, pod światło',
+    },
   },
   process: {
     title: 'Od roju do słoika',
@@ -54,7 +59,6 @@ export const pl = {
     featured: 'Polecany',
     size: 'Pojemność',
     price: 'Cena',
-    photoPlaceholder: 'Zdjęcie produktu wkrótce',
   },
   howToOrder: {
     title: 'Jak zamówić',

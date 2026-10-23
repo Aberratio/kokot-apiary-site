@@ -25,7 +25,7 @@ export function OrderSection({ locale, content, dict }: OrderSectionProps) {
     content.deliveryOptions.length > 0
   const t = dict.order
   return (
-    <Section id="order" labelledBy="order-title" className={styles.section}>
+    <Section id="order" labelledBy="order-title" className={styles.section} light="left">
       <KineticText as="h2" id="order-title">
         {canOrder ? t.titleForm : t.titleContact}
       </KineticText>

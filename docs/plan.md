@@ -6,22 +6,23 @@ A one-page website for Franciszek Kokot's apiary that feels modern and creative:
 
 ## Decisions
 
-| Topic          | Decision                                                                                                                                       |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework      | Next.js (App Router) + TypeScript, hosted on Vercel                                                                                            |
-| 3D and effects | three.js, @react-three/fiber, @react-three/drei, postprocessing, custom GLSL, GSAP (incl. ScrollTrigger and SplitText, free since 2025), Lenis |
-| Paid libraries | None. Every dependency must be free; all are open source except GSAP, free under its own no-charge licence                                     |
-| Shared code    | Reusable effects go to `web-studio-kit`, installed as a pinned git dependency (`github:aberratio/web-studio-kit#vX.Y.Z`)                       |
-| CMS            | Custom, built into this app under `/admin`. Single admin user (Franciszek)                                                                     |
-| Database       | Postgres on the free Neon tier (Vercel Marketplace), Drizzle ORM                                                                               |
-| Images         | Vercel Blob, served through `next/image`                                                                                                       |
-| Auth           | One admin account: password hash in env, signed httpOnly session cookie. No third-party auth service                                           |
-| Email          | Resend free tier, sent from a server action or route handler                                                                                   |
-| Languages      | Polish by default, English switch. Every CMS text field has a PL and an EN value                                                               |
-| Ordering       | CMS flag `orderMode`: `form` (order form) or `contact` (contact form only). Both must work                                                     |
-| Domain         | `*.vercel.app` for now                                                                                                                         |
-| Content        | Nothing exists yet. Use placeholder photos, copy and prices, all replaceable from the CMS                                                      |
-| Fonts          | Fraunces (display, soft 144pt cut) and Instrument Sans (body), self-hosted as small subset files (`assets/fonts`). The admin keeps Geist       |
+| Topic          | Decision                                                                                                                                                    |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework      | Next.js (App Router) + TypeScript, hosted on Vercel                                                                                                         |
+| 3D and effects | three.js, @react-three/fiber, @react-three/drei, postprocessing, custom GLSL, GSAP (incl. ScrollTrigger and SplitText, free since 2025), Lenis              |
+| Paid libraries | None. Every dependency must be free; all are open source except GSAP, free under its own no-charge licence                                                  |
+| Shared code    | Reusable effects go to `web-studio-kit`, installed as a pinned git dependency (`github:aberratio/web-studio-kit#vX.Y.Z`)                                    |
+| CMS            | Custom, built into this app under `/admin`. Single admin user (Franciszek)                                                                                  |
+| Database       | Postgres on the free Neon tier (Vercel Marketplace), Drizzle ORM                                                                                            |
+| Images         | Vercel Blob, served through `next/image`                                                                                                                    |
+| Auth           | One admin account: password hash in env, signed httpOnly session cookie. No third-party auth service                                                        |
+| Email          | Resend free tier, sent from a server action or route handler                                                                                                |
+| Languages      | Polish by default, English switch. Every CMS text field has a PL and an EN value                                                                            |
+| Ordering       | CMS flag `orderMode`: `form` (order form) or `contact` (contact form only). Both must work                                                                  |
+| Domain         | `*.vercel.app` for now                                                                                                                                      |
+| Content        | Nothing exists yet. Use placeholder photos, copy and prices, all replaceable from the CMS                                                                   |
+| Graphics       | Rendered stills and the jar model come from Python scripts in `blender/`, run headless in Blender 5.2 (`npm run assets:build`); no hand-made `.blend` files |
+| Fonts          | Fraunces (display, soft 144pt cut) and Instrument Sans (body), self-hosted as small subset files (`assets/fonts`). The admin keeps Geist                    |
 
 ## Page sections (one page, scroll-driven)
 
@@ -90,7 +91,7 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 - [x] Hero honey shader (reusable part goes into the kit). (Kit `fluidFragmentShader`, v0.2.0.)
 - [x] Kinetic typography for the hero and section titles (SplitText + shader distortion). (The distortion is an SVG displacement filter rather than a WebGL shader: it works on real DOM text, so the titles stay selectable and accessible.)
 - [x] Particle swarm to honeycomb to jar morph.
-- [x] 3D honey jar model (built in code or Blender, compressed `.glb`) for the featured product. (Built in code from lathe profiles, so there is no model file to compress.)
+- [x] 3D honey jar model (built in code or Blender, compressed `.glb`) for the featured product. (Built in code from lathe profiles at first; phase 7 replaced it with a compressed Blender model.)
 - [x] Post-processing pass (bloom, grain) tuned per quality tier.
 - [x] Light-mode fallback for every scene.
 
@@ -105,6 +106,16 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 - [x] Hero honey dipper: a raymarched shader in the kit (`honeyDipperFragmentShader`, v0.3.0; the site pins v0.3.1), text left of the dipper on wide screens and below it on phones, an SVG illustration of the same scene as the light-mode fallback.
 - [x] Fonts: Fraunces for display type and Instrument Sans for body text, Polish letters checked in both, Fraunces in the Open Graph image.
 - [x] Lighthouse mobile on a deployment: LCP under 2.5 s with a warm cache. (Live, warm cache, median of 3 runs per page: `/pl` 2.38 s, `/en` 2.41 s; one of the six runs reached 2.52 s. CLS 0, Accessibility, Best Practices and SEO 100, Performance 66–69: the honey dipper's shader compile adds about 2.5 s of blocking time in Lighthouse's software renderer.)
+
+### Phase 7: one visual language and Blender graphics
+
+- [x] Audit of every section against the hero at 1280 and 375, and three directions (Backlit, Walnut and wax, Golden hour) shown on the real page. The owner picked Backlit.
+- [x] Backlit across the page: the hero's palette and night ground everywhere, a low sun per section alternating sides, CSS bokeh and grain, dark glass surfaces with a rim of light, honey buttons, recessed fields with a honey focus glow, the footer. The admin keeps its light theme.
+- [x] Blender pipeline: procedural jar, dipper, comb and hive with the hero's light rig; stills as AVIF and WebP per breakpoint, with budgets checked by a test.
+- [x] The Blender jar (Meshopt `.glb`, 38 KB) replaces the lathe jar, lit by the kit's new `BacklitEnvironment` (v0.4.0); its glass and honey are shaders matched to the rendered still.
+- [x] Rendered stills as placeholders for About and the product cards, and as the light-mode fallbacks of the jar and particle scenes. They load after the page and near the viewport only.
+- [x] Local Lighthouse mobile against main on the same machine (median of 5 runs per page): LCP 2.64 s on both pages against 2.65 s on main, the same bytes before LCP, CLS 0. axe: no violations.
+- [ ] Live Lighthouse mobile after merge: LCP under 2.5 s on `/pl` and `/en`.
 
 ## Open questions
 
