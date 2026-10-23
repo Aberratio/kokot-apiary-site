@@ -6,6 +6,15 @@
 .section {
   --sun-x: 92%;
   --rim-angle: 205deg;
+  /* Built here, not on :root: a custom property resolves var() where it is declared, so a
+     :root rim would keep the root's angle in every section. */
+  --surface-rim: linear-gradient(
+    var(--rim-angle),
+    rgb(255 193 100 / 0.55),
+    rgb(255 193 100 / 0.1) 30%,
+    rgb(255 193 100 / 0.03) 65%,
+    rgb(255 193 100 / 0.16)
+  );
   position: relative;
   padding-block: 7rem 5rem;
   /* Full-bleed background, content in a 68rem column. */

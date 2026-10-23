@@ -34,7 +34,7 @@ export function Offer({ locale, products, dict }: OfferProps) {
               className={styles.featuredGate}
               fallback={<JarStill className={styles.featuredStill} />}
             >
-              <JarScene />
+              <JarScene fallback={<JarStill className={styles.featuredStill} />} />
             </QualityGate>
           </div>
           <div>
@@ -63,7 +63,8 @@ export function Offer({ locale, products, dict }: OfferProps) {
               // A rendered jar until Franciszek uploads a photo of this product.
               <LazyStill
                 name={productStill(index)}
-                alt={localize(product.imageAlt, locale) || localize(product.name, locale)}
+                // The product's name, not its photo alt: that may describe a removed photo.
+                alt={localize(product.name, locale)}
                 className={styles.productPhoto}
                 sizes="(min-width: 68rem) 21rem, (min-width: 36rem) 50vw, 100vw"
               />

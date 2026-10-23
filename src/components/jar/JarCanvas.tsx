@@ -1,11 +1,12 @@
 'use client'
 
 import { useFrame, useLoader, useThree } from '@react-three/fiber'
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { type ReactNode, Suspense, useEffect, useMemo, useRef } from 'react'
 import { type Group, type Material, type Mesh, MeshStandardMaterial } from 'three'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { BacklitEnvironment, SceneCanvas } from 'web-studio-kit'
+import { SceneErrorBoundary } from '../SceneErrorBoundary'
 import { glassMaterial, honeyMaterial } from './materials'
 
 /** Built by blender/export_jar.py and compressed by scripts/build-assets.mts (about 38 KB). */
@@ -73,16 +74,19 @@ function Jar() {
  * honey glows. The glass and honey are shaders matched to the Blender still (materials.ts);
  * the environment lights the lid. It turns slowly and follows the pointer.
  */
-export default function JarCanvas() {
+export default function JarCanvas({ fallback }: { fallback: ReactNode }) {
   return (
-    <SceneCanvas camera={{ position: [0, 0.25, 5.4], fov: 32 }}>
-      <BacklitEnvironment intensity={5} />
-      {/* The sun from behind for the honey's rim, and a soft warm key from the front left. */}
-      <directionalLight position={[3, 4, -4]} intensity={2.4} color={SUN} />
-      <directionalLight position={[-3, 1.5, 3]} intensity={0.5} color="#ffd9a0" />
-      <Suspense fallback={null}>
-        <Jar />
-      </Suspense>
-    </SceneCanvas>
+    // The model is the first scene asset fetched over the network: if it fails, show the still.
+    <SceneErrorBoundary fallback={fallback}>
+      <SceneCanvas camera={{ position: [0, 0.25, 5.4], fov: 32 }}>
+        <BacklitEnvironment intensity={5} />
+        {/* The sun from behind for the honey's rim, and a soft warm key from the front left. */}
+        <directionalLight position={[3, 4, -4]} intensity={2.4} color={SUN} />
+        <directionalLight position={[-3, 1.5, 3]} intensity={0.5} color="#ffd9a0" />
+        <Suspense fallback={null}>
+          <Jar />
+        </Suspense>
+      </SceneCanvas>
+    </SceneErrorBoundary>
   )
 }

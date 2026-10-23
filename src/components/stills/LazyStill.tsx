@@ -14,20 +14,22 @@ interface LazyStillProps {
 
 /** Resolves after the page's load event, once the main thread is idle. */
 function afterLoad(callback: () => void): () => void {
-  let idle = 0
+  // Idle callbacks and timeouts number their ids separately; cancel with the matching call.
+  let cancel = () => {}
   const schedule = () => {
     if (typeof requestIdleCallback === 'function') {
-      idle = requestIdleCallback(callback, { timeout: 1500 })
+      const id = requestIdleCallback(callback, { timeout: 1500 })
+      cancel = () => cancelIdleCallback(id)
     } else {
-      idle = window.setTimeout(callback, 200)
+      const id = window.setTimeout(callback, 200)
+      cancel = () => clearTimeout(id)
     }
   }
   if (document.readyState === 'complete') schedule()
   else window.addEventListener('load', schedule, { once: true })
   return () => {
     window.removeEventListener('load', schedule)
-    if (typeof cancelIdleCallback === 'function') cancelIdleCallback(idle)
-    clearTimeout(idle)
+    cancel()
   }
 }
 
@@ -85,6 +87,8 @@ export function LazyStill({ name, alt, sizes, className }: LazyStillProps) {
         decoding="async"
         loading="lazy"
         onLoad={fade ? () => setShow(true) : undefined}
+        // A failed still shows its alt text rather than an empty tile.
+        onError={fade ? () => setShow(true) : undefined}
         data-shown={fade ? show : undefined}
       />
     </picture>

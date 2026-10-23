@@ -106,8 +106,9 @@
     box-shadow 0.2s;
 }
 
-/* Focus lights the well's rim with honey. */
-.form input:focus-visible,
+/* Focus lights the well's rim with honey. Radio buttons keep the global outline: a native
+   radio has no border to light. */
+.form input:not([type='radio'], [type='checkbox']):focus-visible,
 .form textarea:focus-visible {
   outline: none;
   border-color: var(--honey);

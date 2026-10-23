@@ -17,17 +17,9 @@
   --focus: #ffd27a;
   --gutter: 1rem;
 
-  /* Surfaces: dark warm glass with a rim of light, brightest on the side the sun is on.
-     Sections set --rim-angle (205deg for a sun on the right, 155deg on the left). */
-  --rim-angle: 205deg;
+  /* Surfaces: dark warm glass with a rim of light (sections.module.css builds --surface-rim
+     per section, brightest on the side its sun is on). */
   --surface-fill: linear-gradient(180deg, #1a0f07, #0f0804);
-  --surface-rim: linear-gradient(
-    var(--rim-angle),
-    rgb(255 193 100 / 0.55),
-    rgb(255 193 100 / 0.1) 30%,
-    rgb(255 193 100 / 0.03) 65%,
-    rgb(255 193 100 / 0.16)
-  );
   --surface-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.9), 0 0 60px -24px rgb(246 169 31 / 0.12);
   --radius: 1.25rem;
 
