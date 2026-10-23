@@ -1,6 +1,6 @@
 """Rendered stills, lit like the hero: warm backlight, dark background, bokeh.
 
-    blender -b --factory-startup -P blender/stills.py -- <shot> [--size WxH] [--samples N]
+    blender -b --factory-startup -P blender/stills.py -- <shot> [--size WxH] [--samples N] [--out file.png]
 
 Writes blender/build/<shot>.png. scripts/build-assets.mts renders every shot at the size in
 src/lib/stills.ts and turns the PNGs into the AVIF and WebP files the site serves. Shots: see SHOTS at the bottom.

@@ -31,11 +31,14 @@ const blender =
   process.env.BLENDER ?? (fs.existsSync(WINDOWS_BLENDER) ? WINDOWS_BLENDER : 'blender')
 
 // The scripts use the Blender 5.2 Python API; another version may render differently or not at all.
-const version = execFileSync(blender, ['--version'], { encoding: 'utf8' }).match(
-  /Blender (\d+\.\d+)/,
-)?.[1]
-if (version !== '5.2') {
-  throw new Error(`Blender 5.2 is required, found ${version ?? 'nothing'} at ${blender}`)
+// Re-encoding existing renders needs no Blender.
+if (!skipRender) {
+  const version = execFileSync(blender, ['--version'], { encoding: 'utf8' }).match(
+    /Blender (\d+\.\d+)/,
+  )?.[1]
+  if (version !== '5.2') {
+    throw new Error(`Blender 5.2 is required, found ${version ?? 'nothing'} at ${blender}`)
+  }
 }
 
 const known = [...Object.keys(STILLS), 'jar-model']
