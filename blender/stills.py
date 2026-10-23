@@ -2,8 +2,8 @@
 
     blender -b --factory-startup -P blender/stills.py -- <shot> [--size WxH] [--samples N]
 
-Writes blender/build/<shot>.png. scripts/build-images.mts turns the PNGs into the AVIF and
-WebP files the site serves. Shots: see SHOTS at the bottom.
+Writes blender/build/<shot>.png. scripts/build-assets.mts renders every shot at the size in
+src/lib/stills.ts and turns the PNGs into the AVIF and WebP files the site serves. Shots: see SHOTS at the bottom.
 """
 
 import math
@@ -92,14 +92,15 @@ def hive_scene():
 
 SHOTS = {
     # name: (builder, default size)
+    # Default sizes match src/lib/stills.ts, so a direct run renders what the pipeline does.
     "jar": (lambda: jar_scene("acacia"), (1200, 1500)),
-    "product-acacia": (lambda: jar_scene("acacia"), (1200, 1200)),
-    "product-linden": (lambda: jar_scene("linden"), (1200, 1200)),
-    "product-wildflower": (lambda: jar_scene("wildflower"), (1200, 1200)),
-    "about-comb": (lambda: comb_scene(), (1200, 1500)),
-    "about-dipper": (jar_with_dipper, (1200, 1500)),
-    "about-hive": (hive_scene, (1200, 1500)),
-    "process-comb": (lambda: comb_scene(frame=False, angle=-30, lens=60, distance=4.6), (1600, 1600)),
+    "product-acacia": (lambda: jar_scene("acacia"), (1000, 1000)),
+    "product-linden": (lambda: jar_scene("linden"), (1000, 1000)),
+    "product-wildflower": (lambda: jar_scene("wildflower"), (1000, 1000)),
+    "about-comb": (lambda: comb_scene(), (1000, 1250)),
+    "about-dipper": (jar_with_dipper, (1000, 1250)),
+    "about-hive": (hive_scene, (1000, 1250)),
+    "process-comb": (lambda: comb_scene(frame=False, angle=-30, lens=60, distance=4.6), (1400, 1400)),
 }
 
 

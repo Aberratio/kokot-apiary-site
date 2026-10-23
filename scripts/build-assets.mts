@@ -30,10 +30,33 @@ const skipRender = argv.includes('--skip-render')
 const blender =
   process.env.BLENDER ?? (fs.existsSync(WINDOWS_BLENDER) ? WINDOWS_BLENDER : 'blender')
 
+// The scripts use the Blender 5.2 Python API; another version may render differently or not at all.
+const version = execFileSync(blender, ['--version'], { encoding: 'utf8' }).match(
+  /Blender (\d+\.\d+)/,
+)?.[1]
+if (version !== '5.2') {
+  throw new Error(`Blender 5.2 is required, found ${version ?? 'nothing'} at ${blender}`)
+}
+
+const known = [...Object.keys(STILLS), 'jar-model']
+const unknown = only?.filter((name) => !known.includes(name)) ?? []
+if (unknown.length)
+  throw new Error(`Unknown asset(s): ${unknown.join(', ')}. Known: ${known.join(', ')}`)
+
 function runBlender(script: string, args: string[] = []) {
   execFileSync(
     blender,
-    ['-b', '--factory-startup', '-P', path.join(ROOT, 'blender', script), '--', ...args],
+    // --python-exit-code: a failing script fails the build instead of leaving a stale render.
+    [
+      '-b',
+      '--factory-startup',
+      '--python-exit-code',
+      '1',
+      '-P',
+      path.join(ROOT, 'blender', script),
+      '--',
+      ...args,
+    ],
     { stdio: ['ignore', 'ignore', 'inherit'] },
   )
 }
