@@ -23,6 +23,34 @@ export const STILLS = {
 
 export type StillName = keyof typeof STILLS
 
+/**
+ * The hero's drip loops: one seamless cycle of the honey drip, rendered for the drip's part of
+ * each hero still only (blender/stills.py `--drip-frames`) and encoded as VP9 at the scale of
+ * the still's largest served width. The site lays the loop over the still, feathered.
+ */
+export const HERO_LOOPS = {
+  'hero-wide': { frames: 72, fps: 24, samples: 128, width: 1920 },
+  'hero-tall': { frames: 72, fps: 24, samples: 128, width: 960 },
+} as const satisfies Partial<
+  Record<StillName, { frames: number; fps: number; samples: number; width: number }>
+>
+
+/** Where a loop sits on its still, as fractions of the still's width and height. */
+export interface HeroLoopRegion {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+export function loopName(still: keyof typeof HERO_LOOPS) {
+  return `${still}-drip`
+}
+
+export function loopUrl(still: keyof typeof HERO_LOOPS) {
+  return `/stills/${still}-drip.webm`
+}
+
 export const STILL_FORMATS = ['avif', 'webp'] as const
 
 export function stillUrl(name: StillName, width: number, format: (typeof STILL_FORMATS)[number]) {

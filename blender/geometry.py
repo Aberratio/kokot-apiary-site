@@ -330,6 +330,71 @@ def drip(start, length, radius=0.07, name="Drip"):
     return obj
 
 
+def _smoothstep(a, b, x):
+    t = max(0.0, min(1.0, (x - a) / (b - a)))
+    return t * t * (3 - 2 * t)
+
+
+def drip_shape(start, length, radius=0.05, bulb=1.0, neck=1.0, name="Drip"):
+    """Like `drip`, with the drop at the end scaled by `bulb` and the thread just above it
+    thinned by `neck` (1 is no pinch). `length` should be at least 0.45."""
+    x, y, z = start
+    profile = [(0, 0.05), (radius * 1.6, 0.0), (radius, -0.15)]
+    steps = 10
+    for i in range(1, steps):
+        t = i / steps
+        r = radius * (1 - 0.65 * t)
+        r *= 1 + (neck - 1) * _smoothstep(0.55, 1.0, t)
+        profile.append((r, -0.15 - t * (length - 0.4)))
+    tail = -length + 0.25
+    b = bulb
+    profile += [(radius * 0.55 * neck, tail), (radius * 2.0 * b, tail - 0.1 * b),
+                (radius * 2.3 * b, tail - 0.22 * b), (radius * 1.6 * b, tail - 0.34 * b),
+                (0, tail - 0.38 * b)]
+    obj = lathe(name, profile, 32)
+    subdivide(obj, 1, 2)
+    obj.location = (x, y, z)
+    obj.data.materials.append(common.honey_material(density=1.4))
+    return obj
+
+
+def drip_cycle(start, phase, surface, radius=0.05):
+    """The honey drip at `phase` (0..1) of one seamless cycle: the drop at the end of the
+    thread fills and stretches, breaks off and falls into the honey at height `surface`,
+    while the thread springs back. Phase 1 looks exactly like phase 0. Returns the objects."""
+    p = phase % 1.0
+    short, long_ = 0.5, 0.74
+    objects = []
+    if p < 0.72:
+        a = p / 0.72
+        length = short + (long_ - short) * a * a
+        bulb = 0.6 + 0.4 * a
+        neck = 1.0 - 0.6 * a * a
+    else:
+        b = (p - 0.72) / 0.28
+        e = _smoothstep(0.0, 1.0, b)
+        length = long_ + (short - long_) * e
+        bulb = 0.5 + 0.1 * e
+        neck = 0.4 + 0.6 * e
+        # The drop that broke off: it leaves where the full drop hung and falls, stretched,
+        # until it sinks into the honey.
+        tau = b * 0.28 * 3.0  # seconds into the fall, for a three-second cycle
+        top = start[2] - long_ + 0.25 - 0.21
+        drop_z = top - 2.6 * tau * tau
+        if drop_z > surface - 0.12:
+            r = radius * 2.1
+            bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=16, radius=r,
+                                                 location=(start[0], start[1], drop_z))
+            drop = bpy.context.active_object
+            drop.name = "FallingDrop"
+            drop.scale = (0.9, 0.9, 1.35 - 0.25 * _smoothstep(0.0, 0.5, b))
+            bpy.ops.object.shade_smooth()
+            drop.data.materials.append(common.honey_material(density=1.4))
+            objects.append(drop)
+    objects.append(drip_shape(start, length, radius, bulb, neck))
+    return objects
+
+
 # --- Comb frame ----------------------------------------------------------------------------
 
 def hex_cell_ring(bm, cx, cy, outer, inner, z0, z1):

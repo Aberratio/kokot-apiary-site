@@ -6,7 +6,7 @@ Every asset is built from these scripts, headless:
 
 The look follows the hero: a dark warm backdrop, a sun glow from the upper right that backlights
 the subject, out-of-focus bokeh behind it, amber honey and walnut wood. The colours are the
-hero's (src/components/hero/HeroCanvas.tsx).
+site's (src/app/globals.css).
 """
 
 import math

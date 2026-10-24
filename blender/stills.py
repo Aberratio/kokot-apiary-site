@@ -57,6 +57,11 @@ def place(parts, location):
         obj.location.z += location[2]
 
 
+# Where the hero's drip leaves the dipper, and the honey level of the open jar below it.
+DRIP_START = (-0.13, -0.1, 1.6)
+HONEY_SURFACE = geometry.HONEY_LEVEL
+
+
 def hero_scene(tall=False):
     """The product line on a dark table against the low sun: an open jar of wildflower honey
     with the dipper above it, linden and acacia behind. Wide frames keep the left half dark
@@ -79,7 +84,8 @@ def hero_scene(tall=False):
     for obj in dipper:
         obj.location = (0.05, -0.05, 1.9)
         obj.rotation_euler = (0, math.radians(90 + 28), math.radians(-25))
-    geometry.drip((-0.13, -0.1, 1.6), 1.05, radius=0.05)
+    # The still shows the drop well formed; the hero's drip loop animates the whole cycle.
+    geometry.drip_cycle(DRIP_START, 0.6, HONEY_SURFACE)
 
     common.backlight_rig(target=(0.2, 1.0, 0.0), scale=2.0, sun_energy=520, rim_energy=150)
     common.sun_glow_card((1.2, 7.0, 1.8), (0, -10, 0), 4.0, strength=4.0, falloff=2.6,
@@ -155,6 +161,53 @@ SHOTS = {
 }
 
 
+def drip_region(width, height, pad=0.32):
+    """The part of the frame the drip moves in, in whole pixels from the top left, with room
+    around it for the site to feather the loop into the still. Sizes are even, for video."""
+    from bpy_extras.object_utils import world_to_camera_view
+    from mathutils import Vector
+
+    scene = bpy.context.scene
+    # The camera was just aimed; its world matrix is only current after an update.
+    bpy.context.view_layer.update()
+    x, y, z = DRIP_START
+    corners = [
+        world_to_camera_view(scene, scene.camera, Vector((x + dx, y, zz)))
+        for dx in (-pad, pad)
+        for zz in (z + 0.15, HONEY_SURFACE - 0.25)
+    ]
+    left = min(c.x for c in corners) * width
+    right = max(c.x for c in corners) * width
+    top = (1 - max(c.y for c in corners)) * height
+    bottom = (1 - min(c.y for c in corners)) * height
+    even = lambda v: int(v) // 2 * 2  # noqa: E731
+    left, top = even(left), even(top)
+    w, h = even(right - left + 2), even(bottom - top + 2)
+    return {"width": width, "height": height, "x": left, "y": top, "w": w, "h": h}
+
+
+def render_drip_frames(shot, frames, width, height, out_dir):
+    """Renders one drip cycle as PNG frames of the drip's region only, plus region.json."""
+    import json
+
+    region = drip_region(width, height)
+    scene = bpy.context.scene
+    scene.render.use_border = True
+    scene.render.use_crop_to_border = True
+    scene.render.border_min_x = region["x"] / width
+    scene.render.border_max_x = (region["x"] + region["w"]) / width
+    scene.render.border_max_y = 1 - region["y"] / height
+    scene.render.border_min_y = 1 - (region["y"] + region["h"]) / height
+    os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, "region.json"), "w", encoding="utf8") as f:
+        json.dump(region, f)
+    for i in range(frames):
+        for obj in [o for o in bpy.data.objects if o.name.startswith(("Drip", "FallingDrop"))]:
+            bpy.data.objects.remove(obj)
+        geometry.drip_cycle(DRIP_START, i / frames, HONEY_SURFACE)
+        common.render(os.path.join(out_dir, f"{i:03d}.png"))
+
+
 def main():
     argv = common.args()
     shot = argv[0]
@@ -168,6 +221,11 @@ def main():
     common.reset()
     common.render_settings(width, height, samples)
     SHOTS[shot][0]()
+    if "--drip-frames" in argv:
+        frames = int(argv[argv.index("--drip-frames") + 1])
+        out_dir = os.path.join(common.BUILD, f"{shot}-drip")
+        render_drip_frames(shot, frames, width, height, out_dir)
+        return
     common.render(out)
 
 
