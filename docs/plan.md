@@ -117,6 +117,11 @@ Admin UI copy in Polish, with an English switch. Editable entities:
 - [x] Local Lighthouse mobile against main on the same machine (median of 5 runs per page): LCP 2.64 s on both pages against 2.65 s on main, the same bytes before LCP, CLS 0. axe: no violations.
 - [x] Live Lighthouse mobile after merge: LCP under 2.5 s on `/pl` and `/en`. (After a few warm-up requests, median of 5 runs per page: `/pl` 1.76 s, `/en` 1.83 s; the first run of each was the slowest, 2.60 s and 2.21 s. Performance 93 and 96, CLS 0, Accessibility, Best Practices and SEO 100. No still or model is requested during the run.)
 
+### Phase 8: a calmer, faster hero
+
+- [x] The raymarched honey dipper stuttered: a full-screen raymarch (80 steps, plus a 10-step march through the honey and a sun-shadow march per honey pixel) with full-resolution bloom on every frame, a shader compile of a second or more on the main thread just as the scene faded in, a crossfade between two dippers that did not line up, and an SVG displacement filter repainting the large title. The hero is now a rendered still of the product line (`hero-wide` and `hero-tall` in `blender/stills.py`, 13 to 37 KB per file) in a plain `<picture>` with high fetch priority. No WebGL in the hero; the reveal, a slow settle and a scroll parallax animate only `transform` and `opacity` (the parallax as a CSS scroll-driven animation, so it costs no JavaScript and is simply absent where unsupported). The title is the LCP and visible from the first frame. Local check at 1440 and 390: frames at 16.7 ms while scrolling the first screen, LCP the title.
+- [ ] Live Lighthouse mobile on the preview: LCP under 2.5 s on `/pl` and `/en`.
+
 ## Open questions
 
 - Apiary name, logo, photos, copy and prices from Franciszek.
