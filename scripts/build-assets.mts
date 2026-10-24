@@ -10,7 +10,15 @@ import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import sharp, { type Sharp } from 'sharp'
-import { STILL_FORMATS, STILLS, type StillName } from '../src/lib/stills'
+import {
+  HERO_LOOPS,
+  loopName,
+  loopUrl,
+  STILL_FORMATS,
+  STILLS,
+  type HeroLoopRegion,
+  type StillName,
+} from '../src/lib/stills'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const BUILD = path.join(ROOT, 'blender', 'build')
@@ -41,7 +49,14 @@ if (!skipRender) {
   }
 }
 
-const known = [...Object.keys(STILLS), 'jar-model']
+const ffmpeg = process.env.FFMPEG ?? 'ffmpeg'
+const LOOP_REGIONS = path.join(ROOT, 'src', 'lib', 'hero-loops.json')
+
+const known = [
+  ...Object.keys(STILLS),
+  ...(Object.keys(HERO_LOOPS) as (keyof typeof HERO_LOOPS)[]).map(loopName),
+  'jar-model',
+]
 const unknown = only?.filter((name) => !known.includes(name)) ?? []
 if (unknown.length)
   throw new Error(`Unknown asset(s): ${unknown.join(', ')}. Known: ${known.join(', ')}`)
@@ -92,6 +107,97 @@ for (const [name, still] of Object.entries(STILLS) as [StillName, (typeof STILLS
     }
   }
 }
+
+// The hero's drip loops: one cycle rendered for the drip's region of the still only, encoded
+// as VP9 at the still's largest served scale. The region goes to src/lib/hero-loops.json,
+// where the hero reads it to lay the loop over the still.
+const regions: Record<string, HeroLoopRegion> = fs.existsSync(LOOP_REGIONS)
+  ? JSON.parse(fs.readFileSync(LOOP_REGIONS, 'utf8'))
+  : {}
+for (const [still, loop] of Object.entries(HERO_LOOPS) as [
+  keyof typeof HERO_LOOPS,
+  (typeof HERO_LOOPS)[keyof typeof HERO_LOOPS],
+][]) {
+  if (!wanted(loopName(still))) continue
+  const frames = path.join(BUILD, `${still}-drip`)
+  if (!skipRender) {
+    const [w, h] = STILLS[still].render
+    console.log(`render ${loopName(still)} (${loop.frames} frames)`)
+    fs.rmSync(frames, { recursive: true, force: true })
+    runBlender('stills.py', [
+      still,
+      '--size',
+      `${w}x${h}`,
+      '--samples',
+      String(loop.samples),
+      '--drip-frames',
+      String(loop.frames),
+    ])
+  }
+  const region = JSON.parse(fs.readFileSync(path.join(frames, 'region.json'), 'utf8'))
+  const scale = loop.width / region.width
+  const even = (v: number) => Math.max(2, Math.round((v * scale) / 2) * 2)
+  const file = path.join(ROOT, 'public', loopUrl(still))
+  const [outW, outH] = [even(region.w), even(region.h)]
+  // Frames are scaled here and handed over as one near-lossless MJPEG stream in a file: the
+  // smallest ffmpeg builds (Playwright's) read nothing else, not even from a pipe.
+  const raw = await Promise.all(
+    Array.from({ length: loop.frames }, (_, i) =>
+      sharp(path.join(frames, `${String(i).padStart(3, '0')}.png`))
+        .resize(outW, outH, { kernel: 'lanczos3' })
+        .removeAlpha()
+        .jpeg({ quality: 100, chromaSubsampling: '4:4:4' })
+        .toBuffer(),
+    ),
+  )
+  const stream = path.join(BUILD, `${still}-drip.mjpeg`)
+  fs.writeFileSync(stream, Buffer.concat(raw))
+  execFileSync(
+    ffmpeg,
+    [
+      '-y',
+      '-loglevel',
+      'error',
+      '-f',
+      'image2pipe',
+      '-c:v',
+      'mjpeg',
+      '-framerate',
+      String(loop.fps),
+      '-i',
+      stream,
+      '-vf',
+      'scale=out_color_matrix=bt709:out_range=tv,format=yuv420p',
+      '-c:v',
+      'libvpx-vp9',
+      '-b:v',
+      '0',
+      '-crf',
+      '22',
+      '-row-mt',
+      '1',
+      '-colorspace',
+      'bt709',
+      '-color_primaries',
+      'bt709',
+      '-color_trc',
+      'iec61966-2-1',
+      '-color_range',
+      'tv',
+      '-an',
+      file,
+    ],
+    { stdio: 'inherit' },
+  )
+  regions[still] = {
+    x: region.x / region.width,
+    y: region.y / region.height,
+    w: region.w / region.width,
+    h: region.h / region.height,
+  }
+  rows.push(`${path.relative(ROOT, file)}\t${(fs.statSync(file).size / 1024).toFixed(1)} KB`)
+}
+fs.writeFileSync(LOOP_REGIONS, JSON.stringify(regions, null, 2) + '\n')
 
 if (wanted('jar-model')) {
   if (!skipRender) {

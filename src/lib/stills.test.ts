@@ -1,6 +1,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import regions from './hero-loops.json'
 import {
+  HERO_LOOPS,
+  loopUrl,
+  type HeroLoopRegion,
   productStill,
   STILL_FORMATS,
   STILLS,
@@ -24,6 +28,19 @@ describe('stills', () => {
           expect(fs.statSync(file).size / 1024, file).toBeLessThanOrEqual(budget(name, width))
         }
       }
+    }
+  })
+
+  it('has every hero drip loop within 400 KB, placed inside its still', () => {
+    for (const still of Object.keys(HERO_LOOPS) as (keyof typeof HERO_LOOPS)[]) {
+      const file = path.join('public', loopUrl(still))
+      expect(fs.existsSync(file), file).toBe(true)
+      expect(fs.statSync(file).size / 1024, file).toBeLessThanOrEqual(400)
+      const region = (regions as Record<string, HeroLoopRegion>)[still]
+      expect(region, still).toBeDefined()
+      const { x, y, w, h } = region!
+      expect(Math.min(x, y, w, h), still).toBeGreaterThanOrEqual(0)
+      expect(Math.max(x + w, y + h), still).toBeLessThanOrEqual(1)
     }
   })
 

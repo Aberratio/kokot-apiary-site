@@ -1,6 +1,9 @@
 /*
- * Phones and portrait screens: the dipper hangs in the upper part, the text sits below it.
- * Wide screens (the same query as WIDE_HERO_QUERY in layout.ts): text left, dipper right.
+ * Phones and portrait screens: the jars stand in the upper part, the text sits below them.
+ * Wide screens (the same query as WIDE_HERO_MEDIA in media.ts): text left, jars right.
+ *
+ * Every animation here moves only `transform` or `opacity`, so the compositor runs it without
+ * repainting: nothing in the hero competes with the main thread or the page's scrolling.
  */
 .hero {
   position: relative;
@@ -9,61 +12,245 @@
   justify-items: center;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 6rem var(--gutter) 6.5rem;
+  /* Room at the bottom for the scroll hint and its line. */
+  padding: 6rem var(--gutter) 8.5rem;
   overflow: hidden;
-  /* The light version's backdrop, matching the shader's: warm dark with the sun up and right. */
+  isolation: isolate;
+  /* Shown until the still arrives, and close to its colours, so it never pops in on white. */
   background:
     radial-gradient(
-      circle at 72% -6%,
-      rgb(255 205 125 / 0.5) 0%,
-      rgb(224 150 45 / 0.16) 26%,
-      transparent 52%
+      circle at 62% 18%,
+      rgb(255 190 100 / 0.35) 0%,
+      rgb(224 150 45 / 0.12) 30%,
+      transparent 60%
     ),
     linear-gradient(to bottom, #1b1007, #0c0703 70%);
 }
 
-.illustration {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  height: 64%;
-  width: auto;
-  aspect-ratio: 2 / 3;
-  transform: translateX(-46%);
-  /* The handle and the sun glow run past the drawing; the hero clips them. */
-  overflow: visible;
-  animation: scene-in 0.8s ease-out both;
-}
+/* --- The scene ------------------------------------------------------------------------- */
 
-.backdrop {
+.media {
   position: absolute;
   inset: 0;
+  z-index: -1;
+  container-type: size;
 }
 
-/* The scene fades in over the illustration once it mounts. */
-.backdrop[data-quality='full'] {
+/*
+ * The still's box, sized and placed like `object-fit: cover` with `object-position` at
+ * (--px, --py), but as a real box: the drip loop and the glint are placed inside it in the
+ * still's own fractions, so they stay on the jars at every screen size.
+ */
+.stage {
+  --ar: 0.6667;
+  --px: 0.5;
+  --py: 0;
+  position: absolute;
+  width: max(100cqw, 100cqh * var(--ar));
+  aspect-ratio: var(--ar);
+  left: calc((100cqw - max(100cqw, 100cqh * var(--ar))) * var(--px));
+  top: calc((100cqh - max(100cqh, 100cqw / var(--ar))) * var(--py));
+  will-change: transform;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  /* Slightly larger than the box, so the pointer parallax never shows its edges. */
+  transform: scale(1.04);
+  animation: settle 2.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.loop {
+  position: absolute;
+  left: calc(var(--x) * 100%);
+  top: calc(var(--y) * 100%);
+  width: calc(var(--w) * 100%);
+  height: calc(var(--h) * 100%);
+  object-fit: fill;
+  pointer-events: none;
+  /* Feathered on every side, so the loop melts into the still around it. */
+  mask-image:
+    linear-gradient(to right, transparent, #000 22%, #000 78%, transparent),
+    linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  mask-composite: intersect;
+  opacity: 0;
+  transition: opacity 0.8s ease-out;
+}
+
+.loop[data-playing='true'] {
+  opacity: 1;
+}
+
+/* A soft band of light that passes over the glass every few seconds. */
+.glint {
+  --gx: 0;
+  --gy: 0.18;
+  --gw: 0.9;
+  --gh: 0.32;
+  position: absolute;
+  left: calc(var(--gx) * 100%);
+  top: calc(var(--gy) * 100%);
+  width: calc(var(--gw) * 100%);
+  height: calc(var(--gh) * 100%);
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(closest-side, #000 55%, transparent);
+}
+
+.glint::before {
+  content: '';
+  position: absolute;
+  inset: -20% auto -20% 0;
+  width: 35%;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgb(255 226 170 / 0.22) 45%,
+    rgb(255 244 220 / 0.32) 50%,
+    rgb(255 226 170 / 0.22) 55%,
+    transparent 80%
+  );
+  transform: translateX(-120%) skewX(-12deg);
+  animation: glint 9s cubic-bezier(0.45, 0, 0.25, 1) 3s infinite;
+}
+
+/* Keeps the text readable: the table below the jars darkens towards the bottom. */
+.media::after,
+.media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.media::after {
+  background: linear-gradient(
+    to bottom,
+    rgb(12 7 3 / 0) 40%,
+    rgb(12 7 3 / 0.55) 62%,
+    rgb(12 7 3 / 0.92) 100%
+  );
+}
+
+/* The reveal: the scene comes up out of the dark once, over the image already painted below. */
+.media::before {
+  z-index: 2;
   background: #0c0703;
-  animation: scene-in 1.4s ease-out both;
+  animation: reveal 1.6s ease-out 0.1s both;
 }
 
-@keyframes scene-in {
+/* Out-of-focus motes in front of the jars, drifting up and back and twinkling. */
+.motes {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.motes span {
+  position: absolute;
+  left: var(--mx);
+  top: var(--my);
+  width: var(--ms);
+  height: var(--ms);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(255 214 150 / 0.9) 0%,
+    rgb(255 190 110 / 0.45) 45%,
+    transparent 70%
+  );
+  opacity: 0;
+  animation:
+    mote-drift var(--md) ease-in-out var(--mdelay) infinite alternate,
+    mote-twinkle calc(var(--md) * 0.6) ease-in-out var(--mdelay) infinite alternate;
+}
+
+.dim {
+  position: absolute;
+  inset: 0;
+  /* Over the motes too, so they dim with the scene. */
+  z-index: 2;
+  background: #0c0703;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes settle {
   from {
-    opacity: 0;
+    transform: scale(1.1);
   }
 }
+
+@keyframes reveal {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes glint {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  28%,
+  100% {
+    transform: translateX(320%) skewX(-12deg);
+  }
+}
+
+@keyframes mote-drift {
+  to {
+    transform: translate3d(calc(var(--mr) * -0.3), var(--mr), 0);
+  }
+}
+
+@keyframes mote-twinkle {
+  from {
+    opacity: calc(var(--mo) * 0.25);
+  }
+  to {
+    opacity: var(--mo);
+  }
+}
+
+/* --- The text -------------------------------------------------------------------------- */
 
 .content {
   position: relative;
   max-width: 40rem;
   text-align: center;
-  /* Keeps light text readable over the honey. */
   text-shadow: 0 1px 18px rgb(0 0 0 / 0.65);
 }
 
 .content h1 {
   font-size: clamp(2.75rem, 12vw, 7rem);
   line-height: 0.98;
-  margin: 0 0 1rem;
+  margin: 0;
+  /* Position only: the title is the page's LCP and stays visible from the first frame. */
+  animation: rise 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* A short honey rule that draws itself under the title. */
+.rule {
+  display: block;
+  width: 4.5rem;
+  height: 2px;
+  margin: 1.1rem auto 1rem;
+  border-radius: 1px;
+  background: linear-gradient(to right, var(--honey), #ffd98a);
+  box-shadow: 0 0 12px rgb(246 169 31 / 0.6);
+  transform-origin: center;
+  animation: draw 1s cubic-bezier(0.65, 0, 0.35, 1) 0.45s both;
 }
 
 .content p {
@@ -71,16 +258,118 @@
   margin: 0;
 }
 
+.content p span {
+  display: inline-block;
+  animation:
+    rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) calc(0.6s + var(--i) * 0.07s) both,
+    fade-in 0.9s ease-out calc(0.6s + var(--i) * 0.07s) both;
+}
+
 .hint {
   position: absolute;
-  bottom: 2rem;
+  bottom: 1.5rem;
   left: 50%;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
   transform: translateX(-50%);
   color: var(--fg-muted);
   font-size: 0.9rem;
   text-decoration: none;
   text-shadow: 0 1px 8px rgb(0 0 0 / 0.6);
   white-space: nowrap;
+  animation: fade-in 1s ease-out 1.4s both;
+}
+
+/* A thin line with a bead of honey running down it. */
+.line {
+  position: relative;
+  width: 1px;
+  height: 2.5rem;
+  overflow: hidden;
+  background: rgb(205 183 154 / 0.25);
+}
+
+.line::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 3px;
+  height: 0.8rem;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, transparent, var(--honey));
+  animation: bead 2.2s cubic-bezier(0.65, 0, 0.35, 1) 2s infinite;
+  transform: translateY(-100%);
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(0.6rem);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes bead {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(320%);
+  }
+}
+
+/* Scrolling away: the scene sinks slower than the page and dims, the text lifts and fades. */
+@supports (animation-timeline: scroll()) {
+  .media {
+    animation: drift linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100vh;
+  }
+
+  .content {
+    animation: lift linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 70vh;
+  }
+
+  /* Dimmed with one dark layer, not the scene's own opacity: fading the whole scene would
+     make the compositor flatten every mote and the video into it on each frame. */
+  .dim {
+    animation: dim linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100vh;
+  }
+
+  @keyframes drift {
+    to {
+      transform: translateY(18%);
+    }
+  }
+
+  @keyframes dim {
+    to {
+      opacity: 0.45;
+    }
+  }
+
+  @keyframes lift {
+    to {
+      transform: translateY(-30%);
+      opacity: 0;
+    }
+  }
 }
 
 @media (min-width: 48rem) and (min-aspect-ratio: 1/1) {
@@ -90,19 +379,32 @@
     padding: 6rem calc(var(--gutter) * 2);
     background:
       radial-gradient(
-        circle at 86% -6%,
-        rgb(255 205 125 / 0.5) 0%,
-        rgb(224 150 45 / 0.16) 24%,
-        transparent 48%
+        circle at 70% 25%,
+        rgb(255 190 100 / 0.35) 0%,
+        rgb(224 150 45 / 0.12) 26%,
+        transparent 52%
       ),
       linear-gradient(to bottom, #1b1007, #0c0703 70%);
   }
 
-  .illustration {
-    left: auto;
-    right: 8%;
-    height: 100%;
-    transform: none;
+  /* The jars stay in frame on screens narrower than 16:9. */
+  .stage {
+    --ar: 1.7778;
+    --px: 0.85;
+    --py: 0.5;
+  }
+
+  .glint {
+    --gx: 0.46;
+    --gy: 0.24;
+    --gw: 0.48;
+    --gh: 0.52;
+  }
+
+  .media::after {
+    background:
+      linear-gradient(to right, rgb(12 7 3 / 0.75) 0%, rgb(12 7 3 / 0.35) 38%, rgb(12 7 3 / 0) 58%),
+      linear-gradient(to bottom, rgb(12 7 3 / 0) 70%, rgb(12 7 3 / 0.6) 100%);
   }
 
   .content {
@@ -112,5 +414,36 @@
 
   .content h1 {
     font-size: clamp(3.5rem, 8vw, 7.5rem);
+  }
+
+  .rule {
+    margin-left: 0;
+    transform-origin: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media,
+  .dim,
+  .frame,
+  .media::before,
+  .glint::before,
+  .motes span,
+  .content,
+  .content h1,
+  .rule,
+  .content p span,
+  .hint,
+  .line::after {
+    animation: none;
+  }
+
+  .media::before,
+  .glint {
+    display: none;
+  }
+
+  .motes span {
+    opacity: calc(var(--mo) * 0.6);
   }
 }

@@ -57,7 +57,7 @@ Every rendered still and the jar model are built from Python scripts in `blender
 | ----------------------- | ----------------------------------------------------------------------------- |
 | `blender/common.py`     | The shared look: the hero's palette, the warm backlight rig, bokeh, materials |
 | `blender/geometry.py`   | Procedural models: honey jar, dipper, honey drip, comb and frame, hive        |
-| `blender/stills.py`     | One scene per still (`jar`, `product-*`, `about-*`, `process-comb`), Cycles   |
+| `blender/stills.py`     | One scene per still (`hero-*`, `jar`, `product-*`, `about-*`, `process-comb`) |
 | `blender/export_jar.py` | The jar as three named meshes (Glass, Honey, Lid) in a `.glb`                 |
 
 ```sh
@@ -66,6 +66,8 @@ npm run assets:build -- --only about-hive --samples 64 # one still, quicker
 npm run assets:build -- --skip-render                  # re-encode the existing renders only
 ```
 
+The hero's drip loops (`hero-wide-drip`, `hero-tall-drip`) also need ffmpeg with libvpx-vp9 (`FFMPEG` env var, else `ffmpeg` on `PATH`; Playwright's bundled ffmpeg works). Their regions on the stills go to `src/lib/hero-loops.json`.
+
 It needs Blender 5.2 (`BLENDER` env var, else the default Windows install path, else `blender` on `PATH`). Renders land in `blender/build/` (not committed). `scripts/build-assets.mts` encodes each still as AVIF and WebP at the widths listed in `src/lib/stills.ts` into `public/stills/`, and compresses the model with gltfpack (Meshopt) into `public/models/jar.glb`.
 
-Budgets, checked by `src/lib/stills.test.ts`: jar model 60 KB or less (now 38 KB); stills 35 KB per file at phone widths and 50 KB at desktop widths, 45 and 90 KB for the jar and the comb (now 4 to 37 KB as AVIF). Stills load only after the page's load event and when they near the viewport (`LazyStill`), so nothing is fetched before the hero title paints.
+Budgets, checked by `src/lib/stills.test.ts`: jar model 60 KB or less (now 38 KB); stills 35 KB per file at phone widths and 50 KB at desktop widths, 45 and 90 KB for the jar and the comb (now 4 to 37 KB as AVIF). Stills load only after the page's load event and when they near the viewport (`LazyStill`), so nothing is fetched before the hero title paints. The exception is the hero's own still (`hero-wide` or `hero-tall`, chosen by the same media query as the layout), which is in the server HTML with high fetch priority.
