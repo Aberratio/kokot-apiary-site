@@ -50,6 +50,55 @@ def jar_with_dipper():
     geometry.drip((0.12, -0.15, 1.55), 1.0, radius=0.05)
 
 
+def place(parts, location):
+    for obj in parts:
+        obj.location.x += location[0]
+        obj.location.y += location[1]
+        obj.location.z += location[2]
+
+
+def hero_scene(tall=False):
+    """The product line on a dark table against the low sun: an open jar of wildflower honey
+    with the dipper above it, linden and acacia behind. Wide frames keep the left half dark
+    for the title; tall frames keep the lower part dark."""
+    common.world(strength=0.5)
+    common.floor(z=-1.2)
+
+    front = geometry.build_jar(*HONEYS["wildflower"], with_label=True)
+    bpy.data.objects.remove(front.pop("Lid"))
+    middle = geometry.build_jar(*HONEYS["linden"], with_label=True)
+    back = geometry.build_jar(*HONEYS["acacia"], with_label=True)
+    place(front.values(), (0.0, 0.0, 0.0))
+    place(middle.values(), (1.55, 1.5, 0.0))
+    place(back.values(), (-1.35, 2.6, 0.0))
+    for parts, turn in ((front, 6), (middle, -14), (back, 18)):
+        for obj in parts.values():
+            obj.rotation_euler.z = math.radians(turn)
+
+    dipper = geometry.build_dipper(length=3.4)
+    for obj in dipper:
+        obj.location = (0.05, -0.05, 1.9)
+        obj.rotation_euler = (0, math.radians(90 + 28), math.radians(-25))
+    geometry.drip((-0.13, -0.1, 1.6), 1.05, radius=0.05)
+
+    common.backlight_rig(target=(0.2, 1.0, 0.0), scale=2.0, sun_energy=520, rim_energy=150)
+    common.sun_glow_card((1.2, 7.0, 1.8), (0, -10, 0), 4.0, strength=4.0, falloff=2.6,
+                         color="#ffb347")
+    # The fill and the rim would show up as hot spots on the glossy table where the text goes.
+    bpy.data.objects["Fill"].visible_glossy = False
+    bpy.data.objects["Rim"].visible_glossy = False
+    common.bokeh(18, center=(2.0, 16.0, 2.2), spread=(9.0, 2.0, 4.0), radius=0.16, strength=3.5)
+
+    if tall:
+        # Subject in the upper part of the frame, the dark table below it for the text.
+        common.camera((0.1, -10.5, 1.1), (0.15, 0.6, -1.2), lens=50, fstop=0.5,
+                      focus=(0.0, 0.0, 0.3))
+    else:
+        # Subject right of centre, the dark backdrop to the left for the title.
+        common.camera((-2.7, -10.2, 1.0), (-2.1, 0.8, -0.05), lens=40, fstop=0.45,
+                      focus=(0.0, 0.0, 0.3))
+
+
 def comb_scene(frame=True, angle=-36, lens=60, distance=4.8, tilt=6.0):
     """Comb seen at a slant, raked by the low sun from the upper right so every cell wall
     catches a highlight, with depth of field taking the far side into soft glow."""
@@ -101,6 +150,8 @@ SHOTS = {
     "about-dipper": (jar_with_dipper, (1000, 1250)),
     "about-hive": (hive_scene, (1000, 1250)),
     "process-comb": (lambda: comb_scene(frame=False, angle=-30, lens=60, distance=4.6), (1400, 1400)),
+    "hero-wide": (lambda: hero_scene(tall=False), (2560, 1440)),
+    "hero-tall": (lambda: hero_scene(tall=True), (1080, 1620)),
 }
 
 

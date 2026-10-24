@@ -12,6 +12,10 @@ export const STILLS = {
   'about-dipper': { render: [1000, 1250], widths: [400, 800] },
   'about-hive': { render: [1000, 1250], widths: [400, 800] },
   'process-comb': { render: [1400, 1400], widths: [600, 1200] },
+  // The hero: a wide frame (subject right, room for the title left) and a tall one for phones
+  // and portrait screens (subject up top, the title below).
+  'hero-wide': { render: [2560, 1440], widths: [1280, 1920] },
+  'hero-tall': { render: [1080, 1620], widths: [640, 960] },
 } as const satisfies Record<
   string,
   { render: readonly [number, number]; widths: readonly number[] }

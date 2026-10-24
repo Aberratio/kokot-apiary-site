@@ -12,7 +12,7 @@ import { glassMaterial, honeyMaterial } from './materials'
 /** Built by blender/export_jar.py and compressed by scripts/build-assets.mts (about 38 KB). */
 export const JAR_MODEL_URL = '/models/jar.glb'
 
-/** The hero's colours (HeroCanvas.tsx). */
+/** The site's palette (globals.css), lit like the hero still. */
 const HONEY = '#f6a91f'
 const HONEY_DEEP = '#6e2a03'
 const SUN = '#ffc164'
